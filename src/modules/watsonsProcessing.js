@@ -53,14 +53,22 @@ export const getWordsTimeStamps = (timestamps) => {
   return words;
 };
 
-function timeStampObj(value, startTime, endTime) {
-  this.value = value;
+// USED
+function timeStampObj(type, value, startTime, endTime) {
+  this.type = type;
+  this.value = value; // string for words, number for duration in seconds
   this.startTime = startTime;
   this.endTime = endTime;
 }
 
 const convertToTimeStampObjs = (timestampsArr) => {
-  return timestampsArr.map((ts) => new timeStampObj(ts[0], ts[1], ts[2]));
+  return timestampsArr.map((ts) => {
+    const type = ts[0] === HESITATION ? HESITATION : WORD;
+    if (type === HESITATION) {
+      return new timeStampObj(HESITATION, ts[2] - ts[1], ts[1], ts[2]);
+    }
+    return new timeStampObj(WORD, ts[0], ts[1], ts[2]);
+  });
 };
 
 export const flattenTranscript = (transcript) => {
@@ -77,6 +85,7 @@ export const flattenTranscript = (transcript) => {
 
     const pauseObj = new timeStampObj(
       PAUSE,
+      afterFirstTimeStamp - priorLastTimeStamp,
       priorLastTimeStamp,
       afterFirstTimeStamp
     );
@@ -84,8 +93,14 @@ export const flattenTranscript = (transcript) => {
     // timestampObjs.push(...convertToTimeStampObjs(priorBlock));
     // timestampPauses.push([priorLastTimeStamp, afterFirstTimeStamp]);
   }
+  console.log(
+    ' timestamps[timestamps.length - 1]:>> ',
+    timestamps[timestamps.length - 1]
+  );
+  console.log('timestampObjs before :>> ', timestampObjs);
   timestampObjs.push(
     ...convertToTimeStampObjs(timestamps[timestamps.length - 1])
   );
+  console.log('timestampObjs after :>> ', timestampObjs);
   return timestampObjs;
 };

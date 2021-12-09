@@ -1,23 +1,17 @@
 import { HESITATION, PAUSE, WORD } from './timestampTypes';
 
-const getTimestampType = (obj) => {
-  if (!(obj.value === HESITATION || obj.value === PAUSE)) {
-    return WORD;
-  }
-  return obj.value;
-};
 export const mergeWordsTimeStamps = (flattenTranscript) => {
   const timestampObjs = [];
 
   let flag = '';
+  let refObj;
   for (var i = 0; i < flattenTranscript.length; i += 1) {
-    const refObj = flattenTranscript[i];
+    refObj = flattenTranscript[i];
+    flag = refObj.type;
 
-    flag = getTimestampType(refObj);
     for (var j = i + 1; j < flattenTranscript.length; j += 1) {
       const nextObj = flattenTranscript[j];
-      let nextType = getTimestampType(nextObj);
-
+      let nextType = nextObj.type;
       if (nextType === flag) {
         //update last item of the list
         refObj.endTime = nextObj.endTime;
@@ -29,6 +23,10 @@ export const mergeWordsTimeStamps = (flattenTranscript) => {
         // if flag not same as previous, update i
         i = j - 1;
         break;
+      }
+      // add last item
+      if (j === flattenTranscript.length - 1) {
+        timestampObjs.push(refObj);
       }
     }
   }
@@ -44,7 +42,7 @@ export const extractWordIndices = (mergedTranscript) => {
 
   for (var i = 0; i < mergedTranscript.length; i += 1) {
     const refObj = mergedTranscript[i];
-    if (getTimestampType(refObj) === WORD) {
+    if (refObj.type === WORD) {
       indices.push(i);
     }
   }

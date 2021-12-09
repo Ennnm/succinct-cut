@@ -87,24 +87,28 @@ function App() {
     ffmpeg.FS('writeFile', IMPORTFILENAME, await fetchFile(video));
 
     const flattenTranscript = watsonProcess.flattenTranscript(transcript);
+    //clean transcript
+    //remove long silences /speed up
+    //remove hesitations
+    console.log('flattenTranscript :>> ', flattenTranscript);
     const mergedTranscript =
-      //clean transcript
-      //remove long silences /speed up
-      //remove hesitations
       processTimestamps.mergeWordsTimeStamps(flattenTranscript);
     console.log('mergedTranscript :>> ', mergedTranscript);
     // cut video according to flattened transcript
     // try to run multiple webworkers to cut concurrently
 
-    const wordIndices = processTimestamps.extractWordIndices(mergedTranscript);
-
     // cut only clips that are needed
     console.time('cut');
     await cutClips(IMPORTFILENAME, mergedTranscript);
     console.timeEnd('cut');
-    CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, wordIndices);
 
-    //reduce pause duration
+    const wordIndices = processTimestamps.extractWordIndices(mergedTranscript);
+    console.log('wordIndices :>> ', wordIndices);
+    CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, wordIndices);
+    // speed up pauses
+    // ffmpeg -i input.mkv -filter_complex "[0:v]setpts=<1/x>*PTS[v];[0:a]atempo=<x>[a]" -map "[v]" -map "[a]" output.mkv
+
+    // reduce pause duration
     console.time('concat');
     await ffmpeg.run(
       '-f',
@@ -121,7 +125,6 @@ function App() {
     console.log('allFiles :>> ', allFiles);
 
     const data = ffmpeg.FS('readFile', FINALFILENAME);
-    console.log('data :>> ', data);
     const url = URL.createObjectURL(
       new Blob([data.buffer], { type: 'image/mp4' })
     );
