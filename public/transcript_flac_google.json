@@ -1,0 +1,1394 @@
+[
+  {
+    "words": [
+      {
+        "startTime": {
+          "seconds": "0",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "0",
+          "nanos": 400000000
+        },
+        "word": "Okay.",
+        "speakerTag": 0
+      }
+    ],
+    "transcript": "Okay.",
+    "confidence": 0.7212185859680176
+  },
+  {
+    "words": [
+      {
+        "startTime": {
+          "seconds": "2",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "2",
+          "nanos": 800000000
+        },
+        "word": "Okay,",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "3",
+          "nanos": 700000000
+        },
+        "endTime": {
+          "seconds": "3",
+          "nanos": 900000000
+        },
+        "word": "there",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "3",
+          "nanos": 900000000
+        },
+        "endTime": {
+          "seconds": "4",
+          "nanos": 200000000
+        },
+        "word": "will",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "4",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "4",
+          "nanos": 400000000
+        },
+        "word": "come",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "4",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "4",
+          "nanos": 400000000
+        },
+        "word": "a",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "4",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "5",
+          "nanos": 200000000
+        },
+        "word": "time",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "5",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "5",
+          "nanos": 600000000
+        },
+        "word": "when",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "5",
+          "nanos": 700000000
+        },
+        "endTime": {
+          "seconds": "6",
+          "nanos": 100000000
+        },
+        "word": "all",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "6",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "6",
+          "nanos": 300000000
+        },
+        "word": "of",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "6",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "6",
+          "nanos": 500000000
+        },
+        "word": "us",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "6",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "6",
+          "nanos": 600000000
+        },
+        "word": "are",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "6",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "6",
+          "nanos": 800000000
+        },
+        "word": "do.",
+        "speakerTag": 0
+      }
+    ],
+    "transcript": " Okay, there will come a time when all of us are do.",
+    "confidence": 0.8818623423576355
+  },
+  {
+    "words": [
+      {
+        "startTime": {
+          "seconds": "9",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "9",
+          "nanos": 500000000
+        },
+        "word": "All",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "9",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "9",
+          "nanos": 700000000
+        },
+        "word": "of",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "9",
+          "nanos": 700000000
+        },
+        "endTime": {
+          "seconds": "10",
+          "nanos": 100000000
+        },
+        "word": "us.",
+        "speakerTag": 0
+      }
+    ],
+    "transcript": " All of us.",
+    "confidence": 0.9128386378288269
+  },
+  {
+    "words": [
+      {
+        "startTime": {
+          "seconds": "13",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "13",
+          "nanos": 200000000
+        },
+        "word": "There",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "13",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "13",
+          "nanos": 400000000
+        },
+        "word": "will",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "13",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "13",
+          "nanos": 600000000
+        },
+        "word": "come",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "13",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "13",
+          "nanos": 700000000
+        },
+        "word": "a",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "13",
+          "nanos": 700000000
+        },
+        "endTime": {
+          "seconds": "14",
+          "nanos": 200000000
+        },
+        "word": "time",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "14",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "14",
+          "nanos": 400000000
+        },
+        "word": "when",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "14",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "14",
+          "nanos": 600000000
+        },
+        "word": "there",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "14",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "14",
+          "nanos": 800000000
+        },
+        "word": "are",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "14",
+          "nanos": 800000000
+        },
+        "endTime": {
+          "seconds": "15",
+          "nanos": 500000000
+        },
+        "word": "no",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "15",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "16",
+          "nanos": 500000000
+        },
+        "word": "human",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "16",
+          "nanos": 800000000
+        },
+        "endTime": {
+          "seconds": "17",
+          "nanos": 700000000
+        },
+        "word": "beings.",
+        "speakerTag": 0
+      }
+    ],
+    "transcript": " There will come a time when there are no human beings.",
+    "confidence": 0.8391956686973572
+  },
+  {
+    "words": [
+      {
+        "startTime": {
+          "seconds": "19",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "19",
+          "nanos": 900000000
+        },
+        "word": "Remaining",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "19",
+          "nanos": 900000000
+        },
+        "endTime": {
+          "seconds": "20",
+          "nanos": 0
+        },
+        "word": "to",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "20",
+          "nanos": 0
+        },
+        "endTime": {
+          "seconds": "20",
+          "nanos": 600000000
+        },
+        "word": "remember",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "20",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "20",
+          "nanos": 900000000
+        },
+        "word": "that",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "21",
+          "nanos": 0
+        },
+        "endTime": {
+          "seconds": "21",
+          "nanos": 500000000
+        },
+        "word": "anyone",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "21",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "21",
+          "nanos": 800000000
+        },
+        "word": "ever",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "21",
+          "nanos": 800000000
+        },
+        "endTime": {
+          "seconds": "22",
+          "nanos": 600000000
+        },
+        "word": "existed",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "23",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "23",
+          "nanos": 200000000
+        },
+        "word": "or",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "23",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "23",
+          "nanos": 400000000
+        },
+        "word": "that",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "23",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "23",
+          "nanos": 500000000
+        },
+        "word": "our",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "23",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "24",
+          "nanos": 100000000
+        },
+        "word": "species",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "24",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "24",
+          "nanos": 300000000
+        },
+        "word": "ever.",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "24",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "24",
+          "nanos": 600000000
+        },
+        "word": "Did",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "24",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "25",
+          "nanos": 100000000
+        },
+        "word": "anything.",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "25",
+          "nanos": 800000000
+        },
+        "endTime": {
+          "seconds": "26",
+          "nanos": 0
+        },
+        "word": "There",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "26",
+          "nanos": 0
+        },
+        "endTime": {
+          "seconds": "26",
+          "nanos": 200000000
+        },
+        "word": "will",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "26",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "26",
+          "nanos": 400000000
+        },
+        "word": "be",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "26",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "26",
+          "nanos": 600000000
+        },
+        "word": "no",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "26",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "26",
+          "nanos": 700000000
+        },
+        "word": "one",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "26",
+          "nanos": 700000000
+        },
+        "endTime": {
+          "seconds": "27",
+          "nanos": 100000000
+        },
+        "word": "left",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "27",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "27",
+          "nanos": 200000000
+        },
+        "word": "to",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "27",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "27",
+          "nanos": 800000000
+        },
+        "word": "remember",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "27",
+          "nanos": 800000000
+        },
+        "endTime": {
+          "seconds": "28",
+          "nanos": 300000000
+        },
+        "word": "Aristotle",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "28",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "28",
+          "nanos": 500000000
+        },
+        "word": "or",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "28",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "28",
+          "nanos": 900000000
+        },
+        "word": "corporate",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "28",
+          "nanos": 900000000
+        },
+        "endTime": {
+          "seconds": "29",
+          "nanos": 200000000
+        },
+        "word": "ra",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "29",
+          "nanos": 700000000
+        },
+        "endTime": {
+          "seconds": "29",
+          "nanos": 900000000
+        },
+        "word": "let",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "29",
+          "nanos": 900000000
+        },
+        "endTime": {
+          "seconds": "30",
+          "nanos": 300000000
+        },
+        "word": "alone",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "30",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "30",
+          "nanos": 700000000
+        },
+        "word": "you",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "31",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "31",
+          "nanos": 800000000
+        },
+        "word": "everything",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "31",
+          "nanos": 800000000
+        },
+        "endTime": {
+          "seconds": "31",
+          "nanos": 900000000
+        },
+        "word": "that",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "31",
+          "nanos": 900000000
+        },
+        "endTime": {
+          "seconds": "32",
+          "nanos": 0
+        },
+        "word": "we",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "32",
+          "nanos": 0
+        },
+        "endTime": {
+          "seconds": "32",
+          "nanos": 400000000
+        },
+        "word": "D",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "33",
+          "nanos": 800000000
+        },
+        "endTime": {
+          "seconds": "34",
+          "nanos": 0
+        },
+        "word": "and",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "34",
+          "nanos": 0
+        },
+        "endTime": {
+          "seconds": "34",
+          "nanos": 300000000
+        },
+        "word": "do",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "34",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "34",
+          "nanos": 600000000
+        },
+        "word": "all",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "35",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "35",
+          "nanos": 300000000
+        },
+        "word": "and",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "35",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "35",
+          "nanos": 500000000
+        },
+        "word": "wrote",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "35",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "35",
+          "nanos": 800000000
+        },
+        "word": "us",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "36",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "36",
+          "nanos": 600000000
+        },
+        "word": "and",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "36",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "36",
+          "nanos": 900000000
+        },
+        "word": "port",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "36",
+          "nanos": 900000000
+        },
+        "endTime": {
+          "seconds": "37",
+          "nanos": 100000000
+        },
+        "word": "and",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "37",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "37",
+          "nanos": 500000000
+        },
+        "word": "Discover.",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "37",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "37",
+          "nanos": 500000000
+        },
+        "word": "It",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "37",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "37",
+          "nanos": 600000000
+        },
+        "word": "will",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "37",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "37",
+          "nanos": 800000000
+        },
+        "word": "be",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "37",
+          "nanos": 800000000
+        },
+        "endTime": {
+          "seconds": "38",
+          "nanos": 400000000
+        },
+        "word": "forgotten",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "38",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "38",
+          "nanos": 800000000
+        },
+        "word": "and",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "38",
+          "nanos": 800000000
+        },
+        "endTime": {
+          "seconds": "39",
+          "nanos": 100000000
+        },
+        "word": "all",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "39",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "39",
+          "nanos": 200000000
+        },
+        "word": "of",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "39",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "39",
+          "nanos": 700000000
+        },
+        "word": "this",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "39",
+          "nanos": 700000000
+        },
+        "endTime": {
+          "seconds": "39",
+          "nanos": 900000000
+        },
+        "word": "will",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "39",
+          "nanos": 900000000
+        },
+        "endTime": {
+          "seconds": "40",
+          "nanos": 100000000
+        },
+        "word": "have",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "40",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "40",
+          "nanos": 400000000
+        },
+        "word": "been",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "40",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "40",
+          "nanos": 600000000
+        },
+        "word": "for",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "40",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "41",
+          "nanos": 0
+        },
+        "word": "naught.",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "41",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "41",
+          "nanos": 800000000
+        },
+        "word": "Maybe",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "41",
+          "nanos": 800000000
+        },
+        "endTime": {
+          "seconds": "42",
+          "nanos": 0
+        },
+        "word": "the",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "42",
+          "nanos": 0
+        },
+        "endTime": {
+          "seconds": "42",
+          "nanos": 200000000
+        },
+        "word": "time",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "42",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "42",
+          "nanos": 300000000
+        },
+        "word": "is",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "42",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "42",
+          "nanos": 600000000
+        },
+        "word": "coming",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "42",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "43",
+          "nanos": 100000000
+        },
+        "word": "soon,",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "43",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "43",
+          "nanos": 300000000
+        },
+        "word": "and",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "43",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "43",
+          "nanos": 400000000
+        },
+        "word": "we",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "43",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "43",
+          "nanos": 500000000
+        },
+        "word": "will",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "43",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "43",
+          "nanos": 600000000
+        },
+        "word": "be",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "43",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "44",
+          "nanos": 0
+        },
+        "word": "is",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "44",
+          "nanos": 0
+        },
+        "endTime": {
+          "seconds": "44",
+          "nanos": 500000000
+        },
+        "word": "millions",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "44",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "44",
+          "nanos": 700000000
+        },
+        "word": "of",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "44",
+          "nanos": 700000000
+        },
+        "endTime": {
+          "seconds": "44",
+          "nanos": 900000000
+        },
+        "word": "years",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "44",
+          "nanos": 900000000
+        },
+        "endTime": {
+          "seconds": "45",
+          "nanos": 300000000
+        },
+        "word": "away.",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "45",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "45",
+          "nanos": 600000000
+        },
+        "word": "But",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "45",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "45",
+          "nanos": 900000000
+        },
+        "word": "even",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "45",
+          "nanos": 900000000
+        },
+        "endTime": {
+          "seconds": "46",
+          "nanos": 0
+        },
+        "word": "if",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "46",
+          "nanos": 0
+        },
+        "endTime": {
+          "seconds": "46",
+          "nanos": 100000000
+        },
+        "word": "we",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "46",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "46",
+          "nanos": 500000000
+        },
+        "word": "survived",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "46",
+          "nanos": 500000000
+        },
+        "endTime": {
+          "seconds": "46",
+          "nanos": 600000000
+        },
+        "word": "the",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "46",
+          "nanos": 600000000
+        },
+        "endTime": {
+          "seconds": "47",
+          "nanos": 100000000
+        },
+        "word": "collapse",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "47",
+          "nanos": 100000000
+        },
+        "endTime": {
+          "seconds": "47",
+          "nanos": 200000000
+        },
+        "word": "of",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "47",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "47",
+          "nanos": 400000000
+        },
+        "word": "our",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "47",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "47",
+          "nanos": 800000000
+        },
+        "word": "son,",
+        "speakerTag": 0
+      }
+    ],
+    "transcript": " Remaining to remember that anyone ever existed or that our species ever. Did anything. There will be no one left to remember Aristotle or corporate ra let alone you everything that we D and do all and wrote us and port and Discover. It will be forgotten and all of this will have been for naught. Maybe the time is coming soon, and we will be is millions of years away. But even if we survived the collapse of our son,",
+    "confidence": 0.7460552453994751
+  },
+  {
+    "words": [
+      {
+        "startTime": {
+          "seconds": "49",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "51",
+          "nanos": 200000000
+        },
+        "word": "we",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "51",
+          "nanos": 200000000
+        },
+        "endTime": {
+          "seconds": "51",
+          "nanos": 400000000
+        },
+        "word": "will",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "51",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "52",
+          "nanos": 100000000
+        },
+        "word": "not",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "52",
+          "nanos": 400000000
+        },
+        "endTime": {
+          "seconds": "53",
+          "nanos": 300000000
+        },
+        "word": "survive",
+        "speakerTag": 0
+      },
+      {
+        "startTime": {
+          "seconds": "53",
+          "nanos": 300000000
+        },
+        "endTime": {
+          "seconds": "53",
+          "nanos": 700000000
+        },
+        "word": "forever.",
+        "speakerTag": 0
+      }
+    ],
+    "transcript": " we will not survive forever.",
+    "confidence": 0.8732374310493469
+  }
+]
