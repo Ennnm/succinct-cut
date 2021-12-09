@@ -17,7 +17,6 @@ export const getLongPauses = (timestamps) => {
   const timestampPauses = [];
 
   for (var i = 0; i < timestamps.length - 1; i += 1) {
-    const pauseBlock = [];
     //last time of first timestamp block
     const priorBlock = timestamps[i];
     const priorLastTimeStamp = priorBlock[priorBlock.length - 1][2];
@@ -57,6 +56,7 @@ export const getWordsTimeStamps = (timestamps) => {
 function timeStampObj(type, value, startTime, endTime) {
   this.type = type;
   this.value = value; // string for words, number for duration in seconds
+  this.filename = '';
   this.startTime = startTime;
   this.endTime = endTime;
 }
@@ -82,25 +82,22 @@ export const flattenTranscript = (transcript) => {
     //first time of last timestamp block
     const afterBlock = timestamps[i + 1];
     const afterFirstTimeStamp = afterBlock[0][1];
-
-    const pauseObj = new timeStampObj(
-      PAUSE,
-      afterFirstTimeStamp - priorLastTimeStamp,
-      priorLastTimeStamp,
-      afterFirstTimeStamp
-    );
-    timestampObjs.push(...convertToTimeStampObjs(priorBlock), pauseObj);
-    // timestampObjs.push(...convertToTimeStampObjs(priorBlock));
-    // timestampPauses.push([priorLastTimeStamp, afterFirstTimeStamp]);
+    const pauseDuration = afterFirstTimeStamp - priorLastTimeStamp;
+      //filter out accidental pauses
+    if (pauseDuration > 0.8) {
+      const pauseObj = new timeStampObj(
+        PAUSE,
+        afterFirstTimeStamp - priorLastTimeStamp,
+        priorLastTimeStamp,
+        afterFirstTimeStamp
+      );
+      timestampObjs.push(...convertToTimeStampObjs(priorBlock), pauseObj);
+      // timestampObjs.push(...convertToTimeStampObjs(priorBlock));
+      // timestampPauses.push([priorLastTimeStamp, afterFirstTimeStamp]);
+    }
   }
-  console.log(
-    ' timestamps[timestamps.length - 1]:>> ',
-    timestamps[timestamps.length - 1]
-  );
-  console.log('timestampObjs before :>> ', timestampObjs);
   timestampObjs.push(
     ...convertToTimeStampObjs(timestamps[timestamps.length - 1])
   );
-  console.log('timestampObjs after :>> ', timestampObjs);
   return timestampObjs;
 };

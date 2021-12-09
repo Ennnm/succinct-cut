@@ -37,12 +37,12 @@ export const mergeWordsTimeStamps = (flattenTranscript) => {
 
 // if its a hesitation, cut
 // if its a pause, speed up
-export const extractWordIndices = (mergedTranscript) => {
+export const extractTypeIndices = (mergedTranscript, type) => {
   const indices = [];
 
   for (var i = 0; i < mergedTranscript.length; i += 1) {
     const refObj = mergedTranscript[i];
-    if (refObj.type === WORD) {
+    if (refObj.type === type) {
       indices.push(i);
     }
   }

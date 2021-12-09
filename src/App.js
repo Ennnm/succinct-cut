@@ -7,9 +7,11 @@ import { transcript } from './transcript_2_flac_narrowband';
 import * as watsonProcess from './modules/watsonsProcessing';
 import * as processTimestamps from './modules/processTimestamps';
 import * as ffmpegProcess from './modules/ffmpegProcess';
+import { HESITATION, PAUSE, WORD } from './modules/timestampTypes';
 
 const fs = require('fs');
 const ffmpeg = createFFmpeg({ log: true });
+
 const path = require('path');
 function App() {
   const [ready, setReady] = useState(false);
@@ -61,25 +63,8 @@ function App() {
     setClip(url);
   };
 
-  const cutClips = async (filename, flattenTranscript) => {
-    console.log('flattenTranscript in cutclip :>> ', flattenTranscript.length);
-    for (var i = 0; i < flattenTranscript.length; i += 1) {
-      const cut = flattenTranscript[i];
-      console.log('cut :>> ', cut, i);
-      await ffmpeg.run(
-        '-i',
-        filename,
-        '-ss',
-        `${cut.startTime}`,
-        '-to',
-        `${cut.endTime}`,
-        `${i}.mp4`
-      );
-    }
-    console.log('finish cutting', i);
-  };
-
   const cleanClip = async () => {
+    console.time('clean');
     const IMPORTFILENAME = 'test.mp4';
     const FINALFILENAME = 'finalcut.mp4';
     let CONCATFILENAME = '';
@@ -93,22 +78,40 @@ function App() {
     console.log('flattenTranscript :>> ', flattenTranscript);
     const mergedTranscript =
       processTimestamps.mergeWordsTimeStamps(flattenTranscript);
-    console.log('mergedTranscript :>> ', mergedTranscript);
     // cut video according to flattened transcript
     // try to run multiple webworkers to cut concurrently
 
+    mergedTranscript.forEach((clip, i) => (clip.filename = i));
+    console.log('mergedTranscript :>> ', mergedTranscript);
+
+    const wordsAndPauses = mergedTranscript.filter(
+      (clip) => clip.type !== HESITATION
+    );
+    console.log('wordsAndPauses :>> ', wordsAndPauses);
+
     // cut only clips that are needed
     console.time('cut');
-    await cutClips(IMPORTFILENAME, mergedTranscript);
+    await ffmpegProcess.cutClips(ffmpeg, IMPORTFILENAME, wordsAndPauses);
     console.timeEnd('cut');
 
-    const wordIndices = processTimestamps.extractWordIndices(mergedTranscript);
-    console.log('wordIndices :>> ', wordIndices);
-    CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, wordIndices);
-    // speed up pauses
-    // ffmpeg -i input.mkv -filter_complex "[0:v]setpts=<1/x>*PTS[v];[0:a]atempo=<x>[a]" -map "[v]" -map "[a]" output.mkv
+    // modify duration of pauses
+    console.time('speed');
+    await ffmpegProcess.changeDurationOfPauses(ffmpeg, 0.8, wordsAndPauses);
+    console.timeEnd('speed');
 
-    // reduce pause duration
+    const clipNames = wordsAndPauses.map((clip) => clip.filename);
+    console.log('clipNames :>> ', clipNames);
+    CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, clipNames);
+
+    // const wordIndices = processTimestamps.extractTypeIndices(
+    //   mergedTranscript,
+    //   WORD
+    // );
+    // console.log('wordIndices :>> ', wordIndices);
+    // CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, wordIndices);
+    // // speed up pauses
+
+    // // reduce pause duration
     console.time('concat');
     await ffmpeg.run(
       '-f',
@@ -129,6 +132,7 @@ function App() {
       new Blob([data.buffer], { type: 'image/mp4' })
     );
     setCleanedClip(url);
+    console.timeEnd('clean');
   };
   const convertToGif = async () => {
     ffmpeg.FS('writeFile', 'test.mp4', await fetchFile(video));
