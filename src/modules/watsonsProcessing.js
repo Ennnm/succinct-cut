@@ -83,7 +83,7 @@ export const flattenTranscript = (transcript) => {
     const afterBlock = timestamps[i + 1];
     const afterFirstTimeStamp = afterBlock[0][1];
     const pauseDuration = afterFirstTimeStamp - priorLastTimeStamp;
-      //filter out accidental pauses
+    //filter out accidental
     if (pauseDuration > 0.8) {
       const pauseObj = new timeStampObj(
         PAUSE,
@@ -91,9 +91,11 @@ export const flattenTranscript = (transcript) => {
         priorLastTimeStamp,
         afterFirstTimeStamp
       );
-      timestampObjs.push(...convertToTimeStampObjs(priorBlock), pauseObj);
       // timestampObjs.push(...convertToTimeStampObjs(priorBlock));
       // timestampPauses.push([priorLastTimeStamp, afterFirstTimeStamp]);
+      timestampObjs.push(...convertToTimeStampObjs(priorBlock), pauseObj);
+    } else {
+      timestampObjs.push(...convertToTimeStampObjs(priorBlock));
     }
   }
   timestampObjs.push(
