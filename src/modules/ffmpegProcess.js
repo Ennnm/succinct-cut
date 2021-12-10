@@ -123,4 +123,20 @@ export const getTimestampsNotSilence = (pauseObjs, duration) => {
   // end of first timestamp to start of second time stamp
   // end of final timestamp in duration
 };
-//after result is processed, reinsert pauses into transcript data structure
+// after result is processed, reinsert pauses into transcript data structure
+// set index to say which pause chunk this audio chunk is after
+
+// or send chunck at a time from browser to make it easier for addition to pause data structure everytime transcription is finished
+// no need to stitch chunks together
+// frequent calling of watsons api
+
+export const convertTimeToSeconds = (time) => {
+  // [HH:]MM:SS[.m...]
+  // 00:00:54.94
+  console.log('time :>> ', time);
+  const timeArr = time.split(':');
+  const [hour, min, s] = timeArr.map((t) => Number(t));
+  const totalSeconds = hour * 3600 + min * 60 + s;
+  console.log('totalSeconds :>> ', totalSeconds);
+  return totalSeconds;
+};

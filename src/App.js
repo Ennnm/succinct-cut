@@ -24,7 +24,8 @@ const ffmpeg = createFFmpeg({
     } else if (message.message.includes(SILENCELOG)) {
       silenceLogs = [];
     } else if (message.message.includes(DURATIONLOG)) {
-      duration = Number(message.message.split(DURATIONLOG)[1].split(',')[0]);
+      const durationHMS = message.message.split(DURATIONLOG)[1].split(',')[0];
+      duration = ffmpegProcess.convertTimeToSeconds(durationHMS);
     }
   },
 });
@@ -78,18 +79,48 @@ function App() {
       // SILENCESFILENAME
     );
     const audioDuration = duration;
+    console.log('duration :>> ', duration);
+    console.log('audioDuration :>> ', audioDuration);
     console.log('silenceLogs :>> ', silenceLogs);
     const pauseObjs = ffmpegProcess.getSilencesFromLogs(silenceLogs);
     console.log('pauseObjs :>> ', pauseObjs);
+    const audioChunks = ffmpegProcess.getTimestampsNotSilence(
+      pauseObjs,
+      audioDuration
+    );
+
+    console.log('audioChunks :>> ', audioChunks);
+    const allChunks = [...pauseObjs, ...audioChunks];
+
+    allChunks.sort((a, b) => a.startTime - b.startTime);
+    allChunks.forEach((chunk, i) => (chunk.filename = i));
+    console.log('allChunks :>> ', allChunks);
 
     // cut audio file
+    console.time('cut');
+    await ffmpegProcess.cutClips(ffmpeg, AUDIOFILENAME, audioChunks);
+    console.timeEnd('cut');
+
+    // modify duration of pauses
+    // console.time('speed');
+    // await ffmpegProcess.changeDurationOfPauses(ffmpeg, 0.8, pauseObjs);
+    // console.timeEnd('speed');
+
+    const clipNames = audioChunks.map((clip) => clip.filename);
+    console.log('clipNames :>> ', clipNames);
+    CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, clipNames);
+
+    console.time('concat');
+    await ffmpegProcess.concatFiles(ffmpeg, CONCATFILENAME, FINALFILENAME);
+    console.timeEnd('concat');
+
     // start from 0, end at start
     // stitch file
     // send for IBM transcription
 
     const allFiles = ffmpeg.FS('readdir', '/'); //: list files inside specific path
     console.log('allFiles :>> ', allFiles);
-    const data = ffmpeg.FS('readFile', AUDIOFILENAME);
+    const data = ffmpeg.FS('readFile', FINALFILENAME);
     console.log('data :>> ', data);
 
     // const url = URL.createObjectURL(
@@ -99,7 +130,7 @@ function App() {
       new Blob([data.buffer], { type: 'audio/aac' })
     );
     console.log('url :>> ', url);
-    // setClip(url);
+    setClip(url);
   };
 
   const cleanClip = async () => {
