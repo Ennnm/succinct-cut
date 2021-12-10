@@ -53,7 +53,7 @@ export const getWordsTimeStamps = (timestamps) => {
 };
 
 // USED
-function timeStampObj(type, value, startTime, endTime) {
+export function timeStampObj(type, value, startTime, endTime) {
   this.type = type;
   this.value = value; // string for words, number for duration in seconds
   this.filename = '';

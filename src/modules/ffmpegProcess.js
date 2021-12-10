@@ -1,4 +1,5 @@
 import { HESITATION, PAUSE, WORD } from './timestampTypes';
+import { timeStampObj } from './watsonsProcessing';
 
 export const cutClips = async (ffmpeg, filename, clips) => {
   for (var i = 0; i < clips.length; i += 1) {
@@ -63,3 +64,63 @@ export const changeDurationOfPauses = async (ffmpeg, duration, clips) => {
     await ffmpeg.FS('unlink', `${ogFilename}.mp4`);
   }
 };
+export const concatFiles = async (ffmpeg, concatTxt, finalFileName) => {
+  await ffmpeg.run(
+    '-f',
+    'concat',
+    '-safe',
+    '0',
+    '-i',
+    concatTxt,
+    finalFileName
+  );
+};
+
+export const removeFiles = async (ffmpeg, filenames) => {
+  for (let i = 0; i < filenames.length; i += 1) {
+    await ffmpeg.FS('unlink', `${filenames[i]}.mp4`);
+  }
+};
+
+export const getSilencesFromLogs = (logs) => {
+  const pauses = [];
+  for (let i = 0; i < logs.length; i += 2) {
+    const startLog = logs[i];
+    const endLog = logs[i + 1];
+
+    const start = Number(startLog.split('silence_start: ')[1]);
+    const end = Number(endLog.split('silence_end: ')[1].split(' ')[0]);
+
+    const pauseObj = new timeStampObj(PAUSE, end - start, start, end);
+    pauses.push(pauseObj);
+  }
+  return pauses;
+};
+
+export const getTimestampsNotSilence = (pauseObjs, duration) => {
+  const chunks = [];
+  let start = 0;
+
+  for (let i = 0; i < pauseObjs.length; i += 1) {
+    const refObj = pauseObjs[i];
+    if (refObj.start === start) {
+      continue;
+    }
+    const endTime = refObj.startTime;
+    const audioObj = new timeStampObj(WORD, '', start, endTime);
+    chunks.push(audioObj);
+    start = refObj.endTime;
+  }
+
+  const lastPause = pauseObjs[pauseObjs.length - 1];
+  if (lastPause.endTime !== duration) {
+    const lastChunk = new timeStampObj(WORD, '', start, duration);
+    chunks.push(lastChunk);
+  }
+
+  return chunks;
+  // 0 to first timestamp
+  // end of first timestamp to start of second time stamp
+  // end of final timestamp in duration
+};
+//after result is processed, reinsert pauses into transcript data structure

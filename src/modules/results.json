@@ -198,3 +198,17 @@
     "endTime": 53.66
   }
 ]
+
+{
+[
+    "[silencedetect @ 0x2c20080] silence_start: 0.411719",
+    "[silencedetect @ 0x2c20080] silence_end: 2.08406 | silence_duration: 1.67234",
+    "[silencedetect @ 0x2c20080] silence_start: 6.8765",
+    "[silencedetect @ 0x2c20080] silence_end: 9.23875 | silence_duration: 2.36225",
+    "[silencedetect @ 0x2c20080] silence_start: 10.1489",
+    "[silencedetect @ 0x2c20080] silence_end: 11.3278 | silence_duration: 1.17888",
+    "[silencedetect @ 0x2c20080] silence_start: 17.7168",
+    "[silencedetect @ 0x2c20080] silence_end: 19.3788 | silence_duration: 1.662",
+    "[silencedetect @ 0x2c20080] silence_start: 53.7894",
+    "[silencedetect @ 0x2c20080] silence_end: 54.944 | silence_duration: 1.15459"
+]}

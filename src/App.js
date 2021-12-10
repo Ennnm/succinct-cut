@@ -9,8 +9,25 @@ import * as processTimestamps from './modules/processTimestamps';
 import * as ffmpegProcess from './modules/ffmpegProcess';
 import { HESITATION, PAUSE, WORD } from './modules/timestampTypes';
 
+const SILENCEDETECT = '[silencedetect @';
+const SILENCELOG = 'silencedetect=';
+const DURATIONLOG = 'Duration: ';
+
+let silenceLogs = [];
+let duration;
 const fs = require('fs');
-const ffmpeg = createFFmpeg({ log: true });
+const ffmpeg = createFFmpeg({
+  log: true,
+  logger: (message) => {
+    if (message.message.includes(SILENCEDETECT)) {
+      silenceLogs.push(message.message);
+    } else if (message.message.includes(SILENCELOG)) {
+      silenceLogs = [];
+    } else if (message.message.includes(DURATIONLOG)) {
+      duration = Number(message.message.split(DURATIONLOG)[1].split(',')[0]);
+    }
+  },
+});
 
 const path = require('path');
 function App() {
@@ -22,6 +39,12 @@ function App() {
   const [images, setImages] = useState();
   const [cleanedClip, setCleanedClip] = useState();
 
+  const IMPORTFILENAME = 'test.mp4';
+  const AUDIOFILENAME = 'test.aac';
+  const SILENCESFILENAME = 'silence.txt';
+  const FINALFILENAME = 'finalcut.mp4';
+  let CONCATFILENAME = '';
+
   const load = async () => {
     await ffmpeg.load();
     setReady(true);
@@ -32,54 +55,63 @@ function App() {
   }, []); // only called once
 
   const convertToClip = async () => {
-    ffmpeg.FS('writeFile', 'test.mp4', await fetchFile(video));
-    await ffmpeg.run('-i', 'test.mp4', '-ss', '0', '-to', '1', 'out.mp4');
-    // clip 2
-    await ffmpeg.run('-i', 'test.mp4', '-ss', '4', '-to', '6', 'out2.mp4');
-    console.log('fs:>> ', fs);
-    //make list of files to concat
-    const inputPaths = ['file out.mp4', 'file out2.mp4'];
-    ffmpeg.FS('writeFile', 'concat_list.txt', inputPaths.join('\n'));
-    // concat
+    ffmpeg.FS('writeFile', IMPORTFILENAME, await fetchFile(video));
+    // await ffmpeg.run('-i', 'test.mp4', '-ss', '0', '-to', '1', 'out.mp4');
     await ffmpeg.run(
-      '-f',
-      'concat',
-      '-safe',
-      '0',
       '-i',
-      'concat_list.txt',
-      'out.mp4'
+      IMPORTFILENAME,
+      '-vn',
+      '-acodec',
+      'copy',
+      AUDIOFILENAME
     );
+    // await ffmpeg.run('-i shennan_video.mp4 -af silencedetect=d=0.8 -f null - ');
+    await ffmpeg.run(
+      '-i',
+      AUDIOFILENAME,
+      '-af',
+      'silencedetect=d=0.8',
+      '-f',
+      'null',
+      '-'
+      // '2>',
+      // SILENCESFILENAME
+    );
+    const audioDuration = duration;
+    console.log('silenceLogs :>> ', silenceLogs);
+    const pauseObjs = ffmpegProcess.getSilencesFromLogs(silenceLogs);
+    console.log('pauseObjs :>> ', pauseObjs);
 
-    // await ffmpeg.run('-i', 'out.mp4', '-i', 'out2.mp4')
+    // cut audio file
+    // start from 0, end at start
+    // stitch file
+    // send for IBM transcription
+
     const allFiles = ffmpeg.FS('readdir', '/'); //: list files inside specific path
     console.log('allFiles :>> ', allFiles);
-    const data = ffmpeg.FS('readFile', 'out.mp4');
+    const data = ffmpeg.FS('readFile', AUDIOFILENAME);
     console.log('data :>> ', data);
-    // const data = ffmpeg.FS('readFile', 'out.mp4');
+
+    // const url = URL.createObjectURL(
+    //   new Blob([data.buffer], { type: 'image/mp4' })
+    // );
     const url = URL.createObjectURL(
-      new Blob([data.buffer], { type: 'image/mp4' })
+      new Blob([data.buffer], { type: 'audio/aac' })
     );
-    setClip(url);
+    console.log('url :>> ', url);
+    // setClip(url);
   };
 
   const cleanClip = async () => {
     console.time('clean');
-    const IMPORTFILENAME = 'test.mp4';
-    const FINALFILENAME = 'finalcut.mp4';
-    let CONCATFILENAME = '';
     //fetch video
     ffmpeg.FS('writeFile', IMPORTFILENAME, await fetchFile(video));
 
-    const flattenTranscript = watsonProcess.flattenTranscript(transcript);
     //clean transcript
-    //remove long silences /speed up
-    //remove hesitations
+    const flattenTranscript = watsonProcess.flattenTranscript(transcript);
     console.log('flattenTranscript :>> ', flattenTranscript);
     const mergedTranscript =
       processTimestamps.mergeWordsTimeStamps(flattenTranscript);
-    // cut video according to flattened transcript
-    // try to run multiple webworkers to cut concurrently
 
     mergedTranscript.forEach((clip, i) => (clip.filename = i));
     console.log('mergedTranscript :>> ', mergedTranscript);
@@ -89,6 +121,7 @@ function App() {
     );
     console.log('wordsAndPauses :>> ', wordsAndPauses);
 
+    // try to run multiple webworkers to cut concurrently
     // cut only clips that are needed
     console.time('cut');
     await ffmpegProcess.cutClips(ffmpeg, IMPORTFILENAME, wordsAndPauses);
@@ -103,30 +136,14 @@ function App() {
     console.log('clipNames :>> ', clipNames);
     CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, clipNames);
 
-    // const wordIndices = processTimestamps.extractTypeIndices(
-    //   mergedTranscript,
-    //   WORD
-    // );
-    // console.log('wordIndices :>> ', wordIndices);
-    // CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, wordIndices);
-    // // speed up pauses
-
-    // // reduce pause duration
     console.time('concat');
-    await ffmpeg.run(
-      '-f',
-      'concat',
-      '-safe',
-      '0',
-      '-i',
-      CONCATFILENAME,
-      FINALFILENAME
-    );
+    await ffmpegProcess.concatFiles(ffmpeg, CONCATFILENAME, FINALFILENAME);
     console.timeEnd('concat');
 
+    await ffmpegProcess.removeFiles(ffmpeg, clipNames);
     const allFiles = ffmpeg.FS('readdir', '/'); //: list files inside specific path
     console.log('allFiles :>> ', allFiles);
-
+    // unlink files
     const data = ffmpeg.FS('readFile', FINALFILENAME);
     const url = URL.createObjectURL(
       new Blob([data.buffer], { type: 'image/mp4' })
@@ -192,14 +209,14 @@ function App() {
       />
 
       <h3>Result</h3>
-      <button onClick={convertToFrames}>Convert</button>
-      <button onClick={convertToGif}>Convert to gif</button>
+      {/* <button onClick={convertToFrames}>Convert</button> */}
+      {/* <button onClick={convertToGif}>Convert to gif</button> */}
       <button onClick={convertToClip}>Convert to clip</button>
       <button onClick={cleanClip}>Clean clip</button>
 
-      {gif && <img src={gif} width="500" />}
+      {/* {gif && <img src={gif} width="500" />}
       {image && <img src={image} width="250" />}
-      {images && [...images].map((image) => <img src={image} width="250" />)}
+      {images && [...images].map((image) => <img src={image} width="250" />)} */}
       {clip && <video controls width="250" src={clip}></video>}
       {cleanedClip && <video controls width="250" src={cleanedClip}></video>}
     </div>

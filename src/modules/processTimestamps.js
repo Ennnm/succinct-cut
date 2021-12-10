@@ -1,5 +1,4 @@
 import { HESITATION, PAUSE, WORD } from './timestampTypes';
-
 export const mergeWordsTimeStamps = (flattenTranscript) => {
   const timestampObjs = [];
 
