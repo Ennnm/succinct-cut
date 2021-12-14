@@ -15,7 +15,7 @@ const params = {
   model: 'en-US_NarrowbandModel',
   // model: 'en-US_BroadbandModel',
   maxAlternatives: 1,
-  interimResults: false,
+  interimResults: true,
   timestamps: true,
   profanityFilter: true,
   smartFormatting: true,
@@ -40,7 +40,7 @@ handler.use(middleware);
 
 handler.post(async (req, res) => {
   try {
-    console.time('watsons');
+    console.time('watsons server');
 
     console.log(req.body);
     console.log(req.files);
@@ -49,28 +49,39 @@ handler.post(async (req, res) => {
 
     //get file send to IBM
     const recognizeStream = speechToText.recognizeUsingWebSocket(params);
+    await fs.stat(path, (err, stats) => {
+      if (err) {
+        console.log('throwing error from getting file stats');
+        throw err;
+      }
+      console.log('stats', stats);
+    });
+
+    console.log('recognizeStream before pipe', recognizeStream);
+
     fs.createReadStream(path).pipe(recognizeStream);
     console.log('aft create read stream');
+    console.log('recognizeStream after pipe', recognizeStream);
 
-    const transcripts = [];
-    recognizeStream.on('data', function (event) {
-      onEvent('Data:', event);
-      transcripts.push(event);
-    });
-    recognizeStream.on('error', function (event) {
-      onEvent('Error:', event);
-    });
-    recognizeStream.on('close', function (event) {
-      fs.writeFile(
-        './transcript2.json',
-        JSON.stringify(transcripts),
-        (err) => {}
-      );
-      onEvent('Close:', event);
-      //send data back to be set as a transcript
-      res.status(200).send(transcripts[0]);
-      console.timeEnd('watsons');
-    });
+    // const transcripts = [];
+    // recognizeStream.on('data', function (event) {
+    //   onEvent('Data:', event);
+    //   transcripts.push(event);
+    // });
+    // recognizeStream.on('error', function (event) {
+    //   onEvent('Error:', event);
+    // });
+    // recognizeStream.on('close', function (event) {
+    //   fs.writeFile(
+    //     './transcript2.json',
+    //     JSON.stringify(transcripts),
+    //     (err) => {}
+    //   );
+    //   onEvent('Close:', event);
+    //   //send data back to be set as a transcript
+    //   res.send(transcripts[0]);
+    //   console.timeEnd('watsons');
+    // });
   } catch (e) {
     console.log('error in watsons', e);
   }
