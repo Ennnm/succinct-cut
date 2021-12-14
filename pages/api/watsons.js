@@ -3,7 +3,6 @@ import SpeechToTextV1 from 'ibm-watson/speech-to-text/v1.js';
 import { IamAuthenticator } from 'ibm-watson/auth/index.js';
 import multer from 'multer';
 import nextConnect from 'next-connect';
-const multerUpload = multer({ dest: 'public/uploads' });
 // app.use(express.static('build'));
 // const ffmpeg = createFFmpeg({ log: true });
 
@@ -41,30 +40,34 @@ const upload = multer({
   }),
 });
 
-const apiRoute = nextConnect({
-  onError(error, req, res) {
-    res
-      .status(501)
-      .json({ error: `Sorry something Happened! ${error.message}` });
-  },
-  onNoMatch(req, res) {
-    res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
-  },
-});
+// const apiRoute = nextConnect({
+//   onError(error, req, res) {
+//     res
+//       .status(501)
+//       .json({ error: `Sorry something Happened! ${error.message}` });
+//   },
+//   onNoMatch(req, res) {
+//     res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+//   },
+// });
 
-apiRoute.use(upload.array('theFiles'));
+// apiRoute.use(upload.single('theFile'));
 
-apiRoute.post((req, res) => {
-  res.status(200).json({ data: 'success' });
-});
+// apiRoute.post((req, res) => {
+//   res.status(200).send('posted!');
+//   // res.status(200).json({ data: 'success' });
+// });
+// apiRoute.get((req, res) => {
+//   res.status(200).send('get get');
+// });
 
-export default apiRoute;
+// export default apiRoute;
 
-export const config = {
-  api: {
-    bodyParser: false, // Disallow body parsing, consume as stream
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false, // Disallow body parsing, consume as stream
+//   },
+// };
 
 // export default function handler(req, res) {
 //   const { method } = req;
@@ -87,3 +90,30 @@ export const config = {
 // }
 
 // export default apiRoute;
+import middleware from '../../middleware/middleware';
+import fs from 'fs';
+// import nextConnect from 'next-connect';
+
+const handler = nextConnect();
+handler.use(middleware);
+
+handler.post(async (req, res) => {
+  console.log(req.body);
+  console.log(req.files);
+  console.log(req.files.audio);
+  // res.statusCode(200).send(req.files[0]);
+  // fs.writeFile('public/uploads/audio.aac', req.files.audio, (err) => {
+  //   console.log('error', err);
+  // });
+  //...
+
+  //get file send to IBM
+});
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+export default handler;

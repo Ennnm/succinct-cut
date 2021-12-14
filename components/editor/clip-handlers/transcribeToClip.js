@@ -17,11 +17,18 @@ export const transcribeClip = async (ffmpeg, audiofilename) => {
   console.log('blob :>> ', blob);
   formData.append('audio', blob, audiofilename);
   // form.append('audioFile', file, 'audio.aac')
-  axios.post('/api/watsons', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
+
+  const config = {
+    headers: { 'content-type': 'multipart/form-data' },
+    onUploadProgress: (event) => {
+      console.log(
+        `Current progress:`,
+        Math.round((event.loaded * 100) / event.total)
+      );
     },
-  });
+  };
+
+  axios.post('/api/watsons', formData, config);
 
   //uint8Array
   //make an axios post to watsons with data as formdata
