@@ -13,10 +13,6 @@ export const cleanClip = async (
   PROCESSEDAUDIOFN,
   setCleanedClip
 ) => {
-
-
-
-
   console.time('clean');
   //fetch video
   ffmpeg.FS('writeFile', IMPORTFILENAME, await fetchFile(video));
@@ -48,7 +44,11 @@ export const cleanClip = async (
 
   const clipNames = wordsAndPauses.map((clip) => clip.filename);
   console.log('clipNames :>> ', clipNames);
-  CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, clipNames);
+  CONCATFILENAME = await ffmpegProcess.buildConcatList(
+    ffmpeg,
+    clipNames,
+    'mp4'
+  );
 
   console.time('concat');
   await ffmpegProcess.concatFiles(ffmpeg, CONCATFILENAME, PROCESSEDAUDIOFN);

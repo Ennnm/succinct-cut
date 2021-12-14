@@ -14,7 +14,7 @@ export const convertToClip = async (
   IMPORTFILENAME,
   AUDIOFILENAME,
   CONCATFILENAME,
-  PROCESSEDAUDIOFN,
+  FINALAUDIO,
   setClip
 ) => {
   let silenceLogs = [];
@@ -72,23 +72,27 @@ export const convertToClip = async (
 
   // cut audio file
   console.time('cut');
-  await ffmpegProcess.cutClips(ffmpeg, AUDIOFILENAME, audioChunks);
+  await ffmpegProcess.cutClips(ffmpeg, AUDIOFILENAME, audioChunks, 'aac');
   console.timeEnd('cut');
 
   const clipNames = audioChunks.map((clip) => clip.filename);
   console.log('clipNames :>> ', clipNames);
-  CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, clipNames);
+  CONCATFILENAME = await ffmpegProcess.buildConcatList(
+    ffmpeg,
+    clipNames,
+    'aac'
+  );
 
   // stitch file
   console.time('concat');
-  await ffmpegProcess.concatFiles(ffmpeg, CONCATFILENAME, PROCESSEDAUDIOFN);
+  await ffmpegProcess.concatFiles(ffmpeg, CONCATFILENAME, FINALAUDIO);
   console.timeEnd('concat');
 
   // send for IBM transcription
 
   const allFiles = ffmpeg.FS('readdir', '/'); //: list files inside specific path
   console.log('allFiles :>> ', allFiles);
-  const data = ffmpeg.FS('readFile', PROCESSEDAUDIOFN);
+  const data = ffmpeg.FS('readFile', FINALAUDIO);
   console.log('data :>> ', data);
 
   const url = URL.createObjectURL(

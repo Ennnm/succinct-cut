@@ -1,7 +1,7 @@
 import { HESITATION, PAUSE, WORD } from './timestampTypes';
 import { timeStampObj } from './watsonsProcessing';
 
-export const cutClips = async (ffmpeg, filename, clips) => {
+export const cutClips = async (ffmpeg, filename, clips, fileExt) => {
   for (var i = 0; i < clips.length; i += 1) {
     const cut = clips[i];
     await ffmpeg.run(
@@ -11,7 +11,7 @@ export const cutClips = async (ffmpeg, filename, clips) => {
       `${cut.startTime}`,
       '-to',
       `${cut.endTime}`,
-      `${cut.filename}.mp4`
+      `${cut.filename}.${fileExt}`
     );
   }
   console.log('finish cutting', i);
@@ -23,10 +23,10 @@ export const concatList = (indices) => {
   return inputPaths;
 };
 
-export const buildConcatList = async (ffmpeg, clipNames) => {
+export const buildConcatList = async (ffmpeg, clipNames, fileExt) => {
   const FILENAME = 'concat_list.txt';
   //try catches?
-  const inputPaths = clipNames.map((name) => `file ${name}.mp4`);
+  const inputPaths = clipNames.map((name) => `file ${name}.${fileExt}`);
   console.log('inputPaths :>> ', inputPaths);
   await ffmpeg.FS('writeFile', FILENAME, inputPaths.join('\n'));
   return FILENAME;

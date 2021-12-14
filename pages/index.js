@@ -23,6 +23,7 @@ export default function Home() {
   const IMPORTFILENAME = 'test.mp4';
   const AUDIOFILENAME = 'test.aac';
   const SILENCESFILENAME = 'silence.txt';
+  const FINALAUDIO = 'finalAudio.aac';
   const PROCESSEDAUDIOFN = 'finalcut.mp4';
   let CONCATFILENAME = '';
 
@@ -73,7 +74,7 @@ export default function Home() {
                   IMPORTFILENAME,
                   AUDIOFILENAME,
                   CONCATFILENAME,
-                  PROCESSEDAUDIOFN,
+                  FINALAUDIO,
                   setClip
                 );
               }}
@@ -83,7 +84,7 @@ export default function Home() {
             {clip && (
               <button
                 onClick={() => {
-                  transcribeClip(ffmpeg, PROCESSEDAUDIOFN);
+                  transcribeClip(ffmpeg, FINALAUDIO);
                 }}
               >
                 Transcribe
