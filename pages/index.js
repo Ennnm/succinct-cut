@@ -84,7 +84,7 @@ export default function Home() {
             {clip && (
               <button
                 onClick={() => {
-                  transcribeClip(ffmpeg, FINALAUDIO);
+                  transcribeClip(ffmpeg, FINALAUDIO, setTranscription);
                 }}
               >
                 Transcribe

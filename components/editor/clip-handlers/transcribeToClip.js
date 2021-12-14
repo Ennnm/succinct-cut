@@ -8,7 +8,7 @@ export const getStaticProps = async () => {};
 // Fetch data on request
 export const getServerSideProps = async () => {};
 
-export const transcribeClip = async (ffmpeg, audiofilename) => {
+export const transcribeClip = async (ffmpeg, audiofilename, setTranscription) => {
   const data = ffmpeg.FS('readFile', audiofilename);
   console.log('data :>> ', data);
 
@@ -28,7 +28,13 @@ export const transcribeClip = async (ffmpeg, audiofilename) => {
     },
   };
 
-  axios.post('/api/watsons', formData, config);
+  axios.post('/api/watsons', formData, config)
+  .then((response)=>{
+    console.log('response in transcribe clip', response);
+    setTranscription(response.data)  
+  }).catch((error)=>{
+    console.log('error in transcribe clip', error)
+  });
 
   //uint8Array
   //make an axios post to watsons with data as formdata

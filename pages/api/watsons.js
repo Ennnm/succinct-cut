@@ -7,6 +7,7 @@ import nextConnect from 'next-connect';
 import middleware from '../../middleware/middleware';
 import fs from 'fs';
 
+import { transcript } from '../../transcript2';
 const params = {
   objectMode: true, // If true, the event handler returns the recognition results exactly as it receives them from the service: as one or more instances of a SpeechRecognitionResults object.
   contentType: 'application/octet-stream',
@@ -39,50 +40,39 @@ handler.use(middleware);
 
 handler.post(async (req, res) => {
   try {
+    console.time('watsons');
+
     console.log(req.body);
     console.log(req.files);
-    console.log(req.files.audio);
-    // const tmpFiles = fs.readdir('/tmp', (err, files) => {
-    //   if (err) console.log(err);
-    //   else {
-    //     console.log('\nCurrent directory filenames:');
-    //     files.forEach((file) => {
-    //       console.log(file);
-    //     });
-    //   }
+
+    // const { path } = req.files.audio[0];
+
+    // //get file send to IBM
+    // const recognizeStream = speechToText.recognizeUsingWebSocket(params);
+    // fs.createReadStream(path).pipe(recognizeStream);
+    // console.log('aft create read stream');
+
+    // const transcripts = [];
+    // recognizeStream.on('data', function (event) {
+    //   onEvent('Data:', event);
+    //   transcripts.push(event);
+    // });
+    // recognizeStream.on('error', function (event) {
+    //   onEvent('Error:', event);
+    // });
+    // recognizeStream.on('close', function (event) {
+    //   fs.writeFile(
+    //     './transcript2.json',
+    //     JSON.stringify(transcripts),
+    //     (err) => {}
+    //   );
+    //   console.timeEnd('watsons');
+    //   onEvent('Close:', event);
+    //   //send data back to be set as a transcript
+    //   res.status(200).send(transcripts[0]);
     // });
 
-    const { path } = req.files.audio[0];
-    const newPath = 'public/uploads/audio.aac';
-    fs.copyFile(path, newPath, (err) => {
-      if (err) {
-        console.log('Error Found:', err);
-      }
-    });
-    //get file send to IBM
-    const recognizeStream = speechToText.recognizeUsingWebSocket(params);
-    fs.createReadStream(newPath).pipe(recognizeStream);
-    console.log('aft create read stream');
-    // recognizeStream.pipe(fs.createWriteStream('transcription.txt'));
-    console.log('after pipe');
-
-    const transcripts = [];
-    recognizeStream.on('data', function (event) {
-      onEvent('Data:', event);
-      transcripts.push(event);
-    });
-    recognizeStream.on('error', function (event) {
-      onEvent('Error:', event);
-    });
-    recognizeStream.on('close', function (event) {
-      fs.writeFile(
-        './transcript2.json',
-        JSON.stringify(transcripts),
-        (err) => {}
-      );
-      // console.timeEnd('watsons');
-      onEvent('Close:', event);
-    });
+    res.status(200).send(transcript[0]);
   } catch (e) {
     console.log('error in watsons', e);
   }
