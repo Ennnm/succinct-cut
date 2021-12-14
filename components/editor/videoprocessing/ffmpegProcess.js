@@ -38,7 +38,12 @@ export const changeSpeedOfClip = (ffmpeg, duration) => {
   //unlink original file
   //create rename temp file to original name
 };
-export const changeDurationOfPauses = async (ffmpeg, duration, clips) => {
+export const changeDurationOfPauses = async (
+  ffmpeg,
+  duration,
+  clips,
+  fileExt
+) => {
   for (var i = 0; i < clips.length; i += 1) {
     const clip = clips[i];
     if (clip.type !== PAUSE) {
@@ -58,10 +63,14 @@ export const changeDurationOfPauses = async (ffmpeg, duration, clips) => {
       '[v]',
       '-map',
       '[a]',
-      `${newName}.mp4`
+      `${newName}.${fileExt}`
     );
     clip.filename = newName;
-    await ffmpeg.FS('unlink', `${ogFilename}.mp4`);
+
+      const allFiles = ffmpeg.FS('readdir', '/'); //: list files inside specific path
+      console.log('allFiles :>> ', allFiles);
+
+    await ffmpeg.FS('unlink', `${ogFilename}.${fileExt}`);
   }
 };
 export const concatFiles = async (ffmpeg, concatTxt, finalFileName) => {
@@ -76,9 +85,9 @@ export const concatFiles = async (ffmpeg, concatTxt, finalFileName) => {
   );
 };
 
-export const removeFiles = async (ffmpeg, filenames) => {
+export const removeFiles = async (ffmpeg, filenames, fileExt) => {
   for (let i = 0; i < filenames.length; i += 1) {
-    await ffmpeg.FS('unlink', `${filenames[i]}.mp4`);
+    await ffmpeg.FS('unlink', `${filenames[i]}.${fileExt}`);
   }
 };
 

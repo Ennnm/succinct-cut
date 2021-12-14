@@ -1,12 +1,15 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { cleanClip } from '../components/editor/clip-handlers/cleanClip';
-import { convertToClip } from '../components/editor/clip-handlers/convertToClip';
+import { extractAudioClip } from '../components/editor/clip-handlers/extractAudioClip';
+import { optimiseAudioClip } from '../components/editor/clip-handlers/optimiseAudioClip';
 import { transcribeClip } from '../components/editor/clip-handlers/transcribeToClip';
+
+import { transcript } from '../components/editor/videoprocessing/transcript_2_flac_narrowband';
 
 const ffmpeg = createFFmpeg({
   corePath: '/ffmpeg-core/ffmpeg-core.js',
@@ -14,11 +17,14 @@ const ffmpeg = createFFmpeg({
 export default function Home() {
   const [ready, setReady] = useState(false);
   const [video, setVideo] = useState();
-  const [gif, setGif] = useState();
   const [clip, setClip] = useState();
   const [images, setImages] = useState();
   const [cleanedClip, setCleanedClip] = useState();
-  const [transcription, setTranscription] = useState();
+  const progressRatio = useRef(0);
+  // const [progressRatio, setProgressRatio] = useState(0);
+
+  //temporary transcript
+  const [transcription, setTranscription] = useState(transcript);
 
   const IMPORTFILENAME = 'test.mp4';
   const AUDIOFILENAME = 'test.aac';
@@ -29,6 +35,11 @@ export default function Home() {
 
   const load = async () => {
     await ffmpeg.load();
+    await ffmpeg.setProgress((p) => {
+      console.log('ratio', p);
+      // setProgressRatio(p.ratio);
+      progressRatio.current = p.ratio;
+    });
     setReady(true);
   };
 
@@ -65,10 +76,24 @@ export default function Home() {
                 );
               }}
             />
-            <h3>Result</h3>
+            <h3>Progress {progressRatio.current} %</h3>
+            {/* <p>{JSON.stringify(progressRatio)}</p> */}
             <button
               onClick={() => {
-                convertToClip(
+                extractAudioClip(
+                  ffmpeg,
+                  video,
+                  IMPORTFILENAME,
+                  FINALAUDIO,
+                  setClip
+                );
+              }}
+            >
+              Extract audio
+            </button>
+            <button
+              onClick={() => {
+                optimiseAudioClip(
                   ffmpeg,
                   video,
                   IMPORTFILENAME,
@@ -79,7 +104,7 @@ export default function Home() {
                 );
               }}
             >
-              Convert to clip
+              Optimise audio
             </button>
             {clip && (
               <button
@@ -93,6 +118,7 @@ export default function Home() {
             <button
               onClick={() => {
                 cleanClip(
+                  transcription,
                   ffmpeg,
                   video,
                   IMPORTFILENAME,
