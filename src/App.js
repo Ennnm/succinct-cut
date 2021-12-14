@@ -7,8 +7,13 @@ import { transcript } from './transcript_2_flac_narrowband';
 import * as watsonProcess from './modules/watsonsProcessing';
 import * as processTimestamps from './modules/processTimestamps';
 import * as ffmpegProcess from './modules/ffmpegProcess';
+import * as watsonsParams from './modules/watsonsParams.js';
 import { HESITATION, PAUSE, WORD } from './modules/timestampTypes';
 
+
+require('dotenv').config();
+
+//TODO get api key working
 const SILENCEDETECT = '[silencedetect @';
 const SILENCELOG = 'silencedetect=';
 const DURATIONLOG = 'Duration: ';
@@ -30,20 +35,19 @@ const ffmpeg = createFFmpeg({
   },
 });
 
-const path = require('path');
 function App() {
   const [ready, setReady] = useState(false);
   const [video, setVideo] = useState();
   const [gif, setGif] = useState();
   const [clip, setClip] = useState();
-  const [image, setImage] = useState();
   const [images, setImages] = useState();
   const [cleanedClip, setCleanedClip] = useState();
+  const [transcription, setTranscription] = useState();
 
   const IMPORTFILENAME = 'test.mp4';
   const AUDIOFILENAME = 'test.aac';
   const SILENCESFILENAME = 'silence.txt';
-  const FINALFILENAME = 'finalcut.mp4';
+  const PROCESSEDAUDIOFN = 'finalcut.mp4';
   let CONCATFILENAME = '';
 
   const load = async () => {
@@ -55,7 +59,7 @@ function App() {
     load();
   }, []); // only called once
 
-  const convertToClip = async () => {
+  const convertToClip = async (ffmpeg, videoFileName) => {
     ffmpeg.FS('writeFile', IMPORTFILENAME, await fetchFile(video));
     // await ffmpeg.run('-i', 'test.mp4', '-ss', '0', '-to', '1', 'out.mp4');
     await ffmpeg.run(
@@ -75,8 +79,6 @@ function App() {
       '-f',
       'null',
       '-'
-      // '2>',
-      // SILENCESFILENAME
     );
     const audioDuration = duration;
     console.log('duration :>> ', duration);
@@ -101,31 +103,22 @@ function App() {
     await ffmpegProcess.cutClips(ffmpeg, AUDIOFILENAME, audioChunks);
     console.timeEnd('cut');
 
-    // modify duration of pauses
-    // console.time('speed');
-    // await ffmpegProcess.changeDurationOfPauses(ffmpeg, 0.8, pauseObjs);
-    // console.timeEnd('speed');
-
     const clipNames = audioChunks.map((clip) => clip.filename);
     console.log('clipNames :>> ', clipNames);
     CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, clipNames);
 
+    // stitch file
     console.time('concat');
-    await ffmpegProcess.concatFiles(ffmpeg, CONCATFILENAME, FINALFILENAME);
+    await ffmpegProcess.concatFiles(ffmpeg, CONCATFILENAME, PROCESSEDAUDIOFN);
     console.timeEnd('concat');
 
-    // start from 0, end at start
-    // stitch file
     // send for IBM transcription
 
     const allFiles = ffmpeg.FS('readdir', '/'); //: list files inside specific path
     console.log('allFiles :>> ', allFiles);
-    const data = ffmpeg.FS('readFile', FINALFILENAME);
+    const data = ffmpeg.FS('readFile', PROCESSEDAUDIOFN);
     console.log('data :>> ', data);
 
-    // const url = URL.createObjectURL(
-    //   new Blob([data.buffer], { type: 'image/mp4' })
-    // );
     const url = URL.createObjectURL(
       new Blob([data.buffer], { type: 'audio/aac' })
     );
@@ -133,6 +126,37 @@ function App() {
     setClip(url);
   };
 
+  const transcribeClip = async () => {
+    //send request to backend
+    //ask backend for key
+
+    // const params = watsonsParams.hesitations;
+    // const recognizeStream = speechToText.recognizeUsingWebSocket(params);
+    // fs.createReadStream(PROCESSEDAUDIOFN).pipe(recognizeStream);
+    // const transcripts = [];
+    // recognizeStream.on('data', function (event) {
+    //   onEvent('Data:', event);
+    //   transcripts.push(event);
+    // });
+    // recognizeStream.on('error', function (event) {
+    //   onEvent('Error:', event);
+    // });
+    // recognizeStream.on('close', function (event) {
+    //   fs.writeFile(
+    //     './transcript2.json',
+    //     JSON.stringify(transcripts),
+    //     (err) => {}
+    //   );
+    //   console.timeEnd();
+    //   onEvent('Close:', event);
+    // });
+    // // console.log('recognizeStream :>> ', recognizeStream);
+    // // Display events on the console.
+    // function onEvent(name, event) {
+    //   console.log('event :>> ', event);
+    //   console.log(name, JSON.stringify(event, null, 2));
+    // }
+  };
   const cleanClip = async () => {
     console.time('clean');
     //fetch video
@@ -168,14 +192,14 @@ function App() {
     CONCATFILENAME = await ffmpegProcess.buildConcatList(ffmpeg, clipNames);
 
     console.time('concat');
-    await ffmpegProcess.concatFiles(ffmpeg, CONCATFILENAME, FINALFILENAME);
+    await ffmpegProcess.concatFiles(ffmpeg, CONCATFILENAME, PROCESSEDAUDIOFN);
     console.timeEnd('concat');
 
     await ffmpegProcess.removeFiles(ffmpeg, clipNames);
     const allFiles = ffmpeg.FS('readdir', '/'); //: list files inside specific path
     console.log('allFiles :>> ', allFiles);
     // unlink files
-    const data = ffmpeg.FS('readFile', FINALFILENAME);
+    const data = ffmpeg.FS('readFile', PROCESSEDAUDIOFN);
     const url = URL.createObjectURL(
       new Blob([data.buffer], { type: 'image/mp4' })
     );
@@ -243,12 +267,14 @@ function App() {
       {/* <button onClick={convertToFrames}>Convert</button> */}
       {/* <button onClick={convertToGif}>Convert to gif</button> */}
       <button onClick={convertToClip}>Convert to clip</button>
+      {clip && <button onClick={transcribeClip}>Transcribe</button>}
       <button onClick={cleanClip}>Clean clip</button>
 
       {/* {gif && <img src={gif} width="500" />}
       {image && <img src={image} width="250" />}
       {images && [...images].map((image) => <img src={image} width="250" />)} */}
       {clip && <video controls width="250" src={clip}></video>}
+      {transcription && <p>{JSON.stringify(transcription)}</p>}
       {cleanedClip && <video controls width="250" src={cleanedClip}></video>}
     </div>
   ) : (
