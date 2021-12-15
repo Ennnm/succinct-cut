@@ -63,11 +63,11 @@ handler.post(async (req, res) => {
     console.log('aft create read stream');
     console.log('recognizeStream after pipe', recognizeStream);
 
+    res.status(200).send('sending data from watsons');
     const transcripts = [];
     recognizeStream.on('data', function (event) {
       onEvent('Data:', event);
       transcripts.push(event);
-      res.status(200).send('get data from watsons');
     });
     recognizeStream.on('error', function (event) {
       onEvent('Error:', event);
