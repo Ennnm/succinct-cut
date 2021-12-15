@@ -89,7 +89,7 @@ handler.post(async (req, res) => {
       //send data back to be set as a transcript
     });
     console.log('after response sent');
-    res.status(200).send('sending data from watsons');
+    // res.status(200).send('sending data from watsons');
   } catch (e) {
     console.log('error in watsons', e);
     res.status(500).send({ error: 'failed to fetch data from watsons' });
