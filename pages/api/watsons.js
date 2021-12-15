@@ -63,16 +63,18 @@ handler.post(async (req, res) => {
     console.log('aft create read stream');
     console.log('recognizeStream after pipe', recognizeStream);
 
-    res.status(200).send('sending data from watsons');
     const transcripts = [];
     recognizeStream.on('data', function (event) {
+      console.log('in data listener');
       onEvent('Data:', event);
       transcripts.push(event);
     });
     recognizeStream.on('error', function (event) {
+      console.log('in error listener');
       onEvent('Error:', event);
     });
     recognizeStream.on('close', function (event) {
+      console.log('in close listener');
       fs.writeFile(
         './transcript2.json',
         JSON.stringify(transcripts),
@@ -86,6 +88,8 @@ handler.post(async (req, res) => {
       onEvent('Close:', event);
       //send data back to be set as a transcript
     });
+    console.log('after response sent');
+    res.status(200).send('sending data from watsons');
   } catch (e) {
     console.log('error in watsons', e);
     res.status(500).send({ error: 'failed to fetch data from watsons' });

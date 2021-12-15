@@ -14,3 +14,8 @@ middleware.use(async (req, res, next) => {
 });
 
 export default middleware;
+
+//middleware to send ealier response back to user
+//next() is handler
+
+//socket from front end to backend?
