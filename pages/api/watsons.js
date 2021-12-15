@@ -67,6 +67,7 @@ handler.post(async (req, res) => {
     recognizeStream.on('data', function (event) {
       onEvent('Data:', event);
       transcripts.push(event);
+      res.status(200).send('get data from watsons');
     });
     recognizeStream.on('error', function (event) {
       onEvent('Error:', event);
@@ -78,6 +79,7 @@ handler.post(async (req, res) => {
         (err) => {}
       );
       if (event !== undefined) {
+        // res.JSON(transcripts[0]);
         res.send(transcripts[0]);
         console.timeEnd('watsons server');
       }
