@@ -15,7 +15,7 @@ const params = {
   model: 'en-US_NarrowbandModel',
   // model: 'en-US_BroadbandModel',
   maxAlternatives: 1,
-  interimResults: true,
+  interimResults: false,
   timestamps: true,
   profanityFilter: true,
   smartFormatting: true,
@@ -86,6 +86,7 @@ handler.post(async (req, res) => {
     });
   } catch (e) {
     console.log('error in watsons', e);
+    res.status(500).send({ error: 'failed to fetch data from watsons' });
   }
   // console.log('recognizeStream :>> ', recognizeStream);
   // Display events on the console.
