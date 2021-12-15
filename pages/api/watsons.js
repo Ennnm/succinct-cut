@@ -63,25 +63,27 @@ handler.post(async (req, res) => {
     console.log('aft create read stream');
     console.log('recognizeStream after pipe', recognizeStream);
 
-    // const transcripts = [];
-    // recognizeStream.on('data', function (event) {
-    //   onEvent('Data:', event);
-    //   transcripts.push(event);
-    // });
-    // recognizeStream.on('error', function (event) {
-    //   onEvent('Error:', event);
-    // });
-    // recognizeStream.on('close', function (event) {
-    //   fs.writeFile(
-    //     './transcript2.json',
-    //     JSON.stringify(transcripts),
-    //     (err) => {}
-    //   );
-    //   onEvent('Close:', event);
-    //   //send data back to be set as a transcript
-    //   res.send(transcripts[0]);
-    //   console.timeEnd('watsons');
-    // });
+    const transcripts = [];
+    recognizeStream.on('data', function (event) {
+      onEvent('Data:', event);
+      transcripts.push(event);
+    });
+    recognizeStream.on('error', function (event) {
+      onEvent('Error:', event);
+    });
+    recognizeStream.on('close', function (event) {
+      fs.writeFile(
+        './transcript2.json',
+        JSON.stringify(transcripts),
+        (err) => {}
+      );
+      if (event !== undefined) {
+        res.send(transcripts[0]);
+        console.timeEnd('watsons server');
+      }
+      onEvent('Close:', event);
+      //send data back to be set as a transcript
+    });
   } catch (e) {
     console.log('error in watsons', e);
   }
