@@ -4,13 +4,51 @@ import styles from '../styles/Home.module.css';
 import { useEffect, useState, useRef } from 'react';
 
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
-import { cleanClip } from '../components/editor/clip-handlers/cleanClip';
-import { extractAudioClip } from '../components/editor/clip-handlers/extractAudioClip';
-import { optimiseAudioClip } from '../components/editor/clip-handlers/optimiseAudioClip';
-import { transcribeClip } from '../components/editor/clip-handlers/transcribeToClip';
+import { cleanClip } from '../lib/clip-handlers/cleanClip';
+import { extractAudioClip } from '../lib/clip-handlers/extractAudioClip';
+import { optimiseAudioClip } from '../lib/clip-handlers/optimiseAudioClip';
+import { transcribeClip } from '../lib/clip-handlers/transcribeToClip';
 
-import { transcript } from '../components/editor/videoprocessing/transcript_2_flac_narrowband';
+import { transcript } from '../lib/videoprocessing/transcript_2_flac_narrowband';
 
+import Loader from '../components/Loader';
+// ============FIREBASE=============
+import { initializeApp } from 'firebase/app';
+import {
+  getAuth,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+} from 'firebase/auth';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+  doc,
+  serverTimestamp,
+} from 'firebase/firestore';
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from 'firebase/storage';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { getPerformance } from 'firebase/performance';
+
+import { getFirebaseConfig } from '../lib/firebase';
+const firebaseAppConfig = getFirebaseConfig();
+// TODO 0: Initialize Firebase
+
+// ============FIREBASE=============
 const ffmpeg = createFFmpeg({
   corePath: '/ffmpeg-core/ffmpeg-core.js',
 });
@@ -18,13 +56,17 @@ export default function Home() {
   const [ready, setReady] = useState(false);
   const [video, setVideo] = useState();
   const [clip, setClip] = useState();
-  const [images, setImages] = useState();
+  // const [images, setImages] = useState();
   const [cleanedClip, setCleanedClip] = useState();
   const progressRatio = useRef(0);
   // const [progressRatio, setProgressRatio] = useState(0);
 
-  //temporary transcript
+  // temporary transcript
   const [transcription, setTranscription] = useState(transcript);
+
+  const [todos, setTodos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
 
   const IMPORTFILENAME = 'test.mp4';
   const AUDIOFILENAME = 'test.aac';
@@ -45,6 +87,12 @@ export default function Home() {
 
   useEffect(() => {
     load();
+    // get the todos
+    loadTodos();
+    // reset loading
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   }, []); // only called once
 
   return (
@@ -76,7 +124,7 @@ export default function Home() {
                 );
               }}
             />
-            <h3>Progress {progressRatio.current} %</h3>
+            <h3>Progress {progressRatio.current} </h3>
             {/* <p>{JSON.stringify(progressRatio)}</p> */}
             <button
               onClick={() => {
@@ -137,9 +185,37 @@ export default function Home() {
             )}
           </div>
         ) : (
+          // <Loader show />
           <p>Loading...</p>
         )}
         <div className={styles.grid}></div>
+        <div className={styles.grid}>
+          {loading ? (
+            <div className={styles.card}>
+              <h2>Loading</h2>
+            </div>
+          ) : todos.length === 0 ? (
+            <div className={styles.card}>
+              <h2>No undone todos</h2>
+              <p>
+                Consider adding a todo from <a href="/add-todo">here</a>
+              </p>
+            </div>
+          ) : (
+            todos.map((todo) => {
+              return (
+                <div>
+                  <h2>{todo.data.arguments['title']}</h2>
+                  <p>{todo.data.arguments['description']}</p>
+                  <div className={styles.cardActions}>
+                    <button type="button">Mark as done</button>
+                    <button type="button">Delete</button>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
       </main>
 
       <footer className={styles.footer}>
@@ -157,3 +233,7 @@ export default function Home() {
     </div>
   );
 }
+initializeApp(firebaseAppConfig);
+// TODO 12: Initialize Firebase Performance Monitoring
+// getPerformance();
+// initFirebaseAuth();

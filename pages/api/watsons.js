@@ -57,11 +57,8 @@ handler.post(async (req, res) => {
       console.log('stats', stats);
     });
 
-    console.log('recognizeStream before pipe', recognizeStream);
-
     fs.createReadStream(path).pipe(recognizeStream);
     console.log('aft create read stream');
-    console.log('recognizeStream after pipe', recognizeStream);
 
     const transcripts = [];
     recognizeStream.on('data', function (event) {
