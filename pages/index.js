@@ -21,29 +21,6 @@ import {
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-  limit,
-  onSnapshot,
-  setDoc,
-  updateDoc,
-  doc,
-  serverTimestamp,
-} from 'firebase/firestore';
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from 'firebase/storage';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { getPerformance } from 'firebase/performance';
-
 import { getFirebaseConfig } from '../lib/firebase';
 const firebaseAppConfig = getFirebaseConfig();
 // TODO 0: Initialize Firebase
@@ -67,7 +44,6 @@ export default function Home() {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
   const IMPORTFILENAME = 'test.mp4';
   const AUDIOFILENAME = 'test.aac';
   const SILENCESFILENAME = 'silence.txt';
@@ -87,12 +63,6 @@ export default function Home() {
 
   useEffect(() => {
     load();
-    // get the todos
-    loadTodos();
-    // reset loading
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
   }, []); // only called once
 
   return (
