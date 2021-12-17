@@ -21,6 +21,11 @@ import {
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
+import { getStorage, connectStorageEmulator } from 'firebase/storage';
+import { getApp } from 'firebase/app';
+import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+
 import { getFirebaseConfig } from '../lib/firebase';
 const firebaseAppConfig = getFirebaseConfig();
 // TODO 0: Initialize Firebase
@@ -204,6 +209,17 @@ export default function Home() {
   );
 }
 initializeApp(firebaseAppConfig);
+
+// EMULATORS
+const functions = getFunctions(getApp());
+connectFunctionsEmulator(functions, 'localhost', 5001);
+
+const storage = getStorage();
+connectStorageEmulator(storage, 'localhost', 9199);
+
+const db = getFirestore();
+connectFirestoreEmulator(db, 'localhost', 8080);
+
 // TODO 12: Initialize Firebase Performance Monitoring
 // getPerformance();
 // initFirebaseAuth();
