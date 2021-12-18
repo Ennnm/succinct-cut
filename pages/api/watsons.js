@@ -7,7 +7,7 @@ import nextConnect from 'next-connect';
 import middleware from '../../middleware/middleware';
 import fs from 'fs';
 
-import { transcript } from '../../transcript2';
+import { transcript } from '../../transcript_sn';
 const params = {
   objectMode: true, // If true, the event handler returns the recognition results exactly as it receives them from the service: as one or more instances of a SpeechRecognitionResults object.
   contentType: 'application/octet-stream',

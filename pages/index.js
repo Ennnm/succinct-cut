@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { cleanClip } from '../lib/clip-handlers/cleanClip';
@@ -11,43 +11,38 @@ import { transcribeClip } from '../lib/clip-handlers/transcribeToClip';
 
 import { transcript } from '../lib/videoprocessing/transcript_2_flac_narrowband';
 
-import Loader from '../components/Loader';
+import { Loader } from '../components/Loader';
 // ============FIREBASE=============
-import { initializeApp } from 'firebase/app';
 import {
-  getAuth,
-  onAuthStateChanged,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-} from 'firebase/auth';
-import { getStorage, connectStorageEmulator } from 'firebase/storage';
-import { getApp } from 'firebase/app';
-import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
-
-import { getFirebaseConfig } from '../lib/firebase';
-const firebaseAppConfig = getFirebaseConfig();
-// TODO 0: Initialize Firebase
+  getFirestore,
+  connectFirestoreEmulator,
+  doc,
+  onSnapshot,
+} from 'firebase/firestore';
+//import needed to get firebase initiated
+import { firestore, auth } from '../lib/firebase';
 
 // ============FIREBASE=============
 const ffmpeg = createFFmpeg({
   corePath: '/ffmpeg-core/ffmpeg-core.js',
 });
 export default function Home() {
+  // const { user, username } = useContext(UserContext);
+
   const [ready, setReady] = useState(false);
   const [video, setVideo] = useState();
-  const [clip, setClip] = useState();
-  // const [images, setImages] = useState();
+  const [audio, setAudio] = useState();
   const [cleanedClip, setCleanedClip] = useState();
+  const [transcription, setTranscription] = useState();
   const progressRatio = useRef(0);
+  let user = auth.currentUser;
+  if(user==null){
+    user={uid:'test'}
+  }
+  console.log('user', user);
   // const [progressRatio, setProgressRatio] = useState(0);
 
   // temporary transcript
-  const [transcription, setTranscription] = useState(transcript);
-
-  const [todos, setTodos] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const IMPORTFILENAME = 'test.mp4';
   const AUDIOFILENAME = 'test.aac';
@@ -57,12 +52,15 @@ export default function Home() {
   let CONCATFILENAME = '';
 
   const load = async () => {
-    await ffmpeg.load();
-    await ffmpeg.setProgress((p) => {
-      console.log('ratio', p);
-      // setProgressRatio(p.ratio);
-      progressRatio.current = p.ratio;
-    });
+    if (!ffmpeg.isLoaded()) {
+      await ffmpeg.load();
+      ffmpeg.setProgress((p) => {
+        console.log('ratio', p);
+        // setProgressRatio(p.ratio);
+        progressRatio.current = p.ratio;
+      });
+    } else {
+    }
     setReady(true);
   };
 
@@ -70,6 +68,24 @@ export default function Home() {
     load();
   }, []); // only called once
 
+  useEffect(() => {
+    //check auth for user
+    if (user !== null) {
+      const userUid = user.uid;
+      console.log('userUid', userUid);
+      const unsub = onSnapshot(
+        doc(firestore, 'transcripts', userUid),
+        (doc) => {
+          if (doc.data() !== undefined && 'response' in doc.data()) {
+            console.log('currentdata:2', JSON.parse(doc.data().response));
+            setTranscription(JSON.parse(doc.data().response).result);
+          }
+        }
+      );
+    } else {
+      console.log('no user logged in, please log in');
+    }
+  }, [audio]);
   return (
     <div className={styles.container}>
       <Head>
@@ -80,6 +96,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Succinct Cut</h1>
+        {user === null && <h3>Please log in</h3>}
         {ready ? (
           <div className="App">
             {video && (
@@ -108,7 +125,7 @@ export default function Home() {
                   video,
                   IMPORTFILENAME,
                   FINALAUDIO,
-                  setClip
+                  setAudio
                 );
               }}
             >
@@ -123,13 +140,13 @@ export default function Home() {
                   AUDIOFILENAME,
                   CONCATFILENAME,
                   FINALAUDIO,
-                  setClip
+                  setAudio
                 );
               }}
             >
               Optimise audio
             </button>
-            {clip && (
+            {audio && (
               <button
                 onClick={() => {
                   transcribeClip(ffmpeg, FINALAUDIO, setTranscription);
@@ -153,44 +170,17 @@ export default function Home() {
             >
               Clean clip
             </button>
-            {clip && <video controls width="250" src={clip}></video>}
+            {audio && <video controls width="250" src={audio}></video>}
             {transcription && <p>{JSON.stringify(transcription)}</p>}
             {cleanedClip && (
               <video controls width="250" src={cleanedClip}></video>
             )}
           </div>
         ) : (
-          // <Loader show />
-          <p>Loading...</p>
+          <Loader show={true} />
+          // <p>Loading...</p>
         )}
         <div className={styles.grid}></div>
-        <div className={styles.grid}>
-          {loading ? (
-            <div className={styles.card}>
-              <h2>Loading</h2>
-            </div>
-          ) : todos.length === 0 ? (
-            <div className={styles.card}>
-              <h2>No undone todos</h2>
-              <p>
-                Consider adding a todo from <a href="/add-todo">here</a>
-              </p>
-            </div>
-          ) : (
-            todos.map((todo) => {
-              return (
-                <div>
-                  <h2>{todo.data.arguments['title']}</h2>
-                  <p>{todo.data.arguments['description']}</p>
-                  <div className={styles.cardActions}>
-                    <button type="button">Mark as done</button>
-                    <button type="button">Delete</button>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
       </main>
 
       <footer className={styles.footer}>
@@ -208,18 +198,3 @@ export default function Home() {
     </div>
   );
 }
-initializeApp(firebaseAppConfig);
-
-// EMULATORS
-const functions = getFunctions(getApp());
-connectFunctionsEmulator(functions, 'localhost', 5001);
-
-const storage = getStorage();
-connectStorageEmulator(storage, 'localhost', 9199);
-
-const db = getFirestore();
-connectFirestoreEmulator(db, 'localhost', 8080);
-
-// TODO 12: Initialize Firebase Performance Monitoring
-// getPerformance();
-// initFirebaseAuth();

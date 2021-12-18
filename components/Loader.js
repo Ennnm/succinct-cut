@@ -1,3 +1,3 @@
-export default function Loader({ show }) {
+export const Loader = ({ show }) => {
   return show ? <div className="loader"></div> : null;
-}
+};
