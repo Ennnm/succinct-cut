@@ -63,6 +63,7 @@ export default function Home() {
         });
       } catch (e) {
         console.log('error loading ffmpeg', e);
+        location.reload();
       }
     } else {
       console.log('ffmpeg loaded');
@@ -71,7 +72,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-     load();
+    load();
   }, []); // only called once
 
   useEffect(() => {
@@ -123,21 +124,22 @@ export default function Home() {
               }}
             />
             <h3>Progress {progressRatio.current} </h3>
-            {/* <p>{JSON.stringify(progressRatio)}</p> */}
-            <button
-              onClick={() => {
-                extractAudioClip(
-                  ffmpeg,
-                  video,
-                  IMPORTFILENAME,
-                  FINALAUDIO,
-                  setAudio
-                );
-              }}
-            >
-              Extract audio
-            </button>
-            <button
+            {video && (
+              <button
+                onClick={() => {
+                  extractAudioClip(
+                    ffmpeg,
+                    video,
+                    IMPORTFILENAME,
+                    FINALAUDIO,
+                    setAudio
+                  );
+                }}
+              >
+                Extract audio
+              </button>
+            )}
+            {/* <button
               onClick={() => {
                 optimiseAudioClip(
                   ffmpeg,
@@ -151,8 +153,8 @@ export default function Home() {
               }}
             >
               Optimise audio
-            </button>
-            {audio && (
+            </button> */}
+            {/* {audio && (
               <button
                 onClick={() => {
                   transcribeClip(ffmpeg, FINALAUDIO, setTranscription);
@@ -160,22 +162,24 @@ export default function Home() {
               >
                 Transcribe
               </button>
+            )} */}
+            {audio && (
+              <button
+                onClick={() => {
+                  cleanClip(
+                    transcription,
+                    ffmpeg,
+                    video,
+                    IMPORTFILENAME,
+                    CONCATFILENAME,
+                    PROCESSEDAUDIOFN,
+                    setCleanedClip
+                  );
+                }}
+              >
+                Clean clip
+              </button>
             )}
-            <button
-              onClick={() => {
-                cleanClip(
-                  transcription,
-                  ffmpeg,
-                  video,
-                  IMPORTFILENAME,
-                  CONCATFILENAME,
-                  PROCESSEDAUDIOFN,
-                  setCleanedClip
-                );
-              }}
-            >
-              Clean clip
-            </button>
             {audio && <video controls width="250" src={audio}></video>}
             {transcription && <p>{JSON.stringify(transcription)}</p>}
             {cleanedClip && (
