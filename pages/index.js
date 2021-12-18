@@ -36,9 +36,9 @@ export default function Home() {
   const [transcription, setTranscription] = useState();
   const progressRatio = useRef(0);
   let user = auth.currentUser;
-  if(user==null){
-    user={uid:'test'}
-  }
+  // if (user == null) {
+  //   user = { uid: 'test' };
+  // }
   console.log('user', user);
   // const [progressRatio, setProgressRatio] = useState(0);
 
@@ -53,19 +53,25 @@ export default function Home() {
 
   const load = async () => {
     if (!ffmpeg.isLoaded()) {
-      await ffmpeg.load();
-      ffmpeg.setProgress((p) => {
-        console.log('ratio', p);
-        // setProgressRatio(p.ratio);
-        progressRatio.current = p.ratio;
-      });
+      console.log('ffmpeg was not loaded');
+      try {
+        await ffmpeg.load().then(() => setReady(true));
+        await ffmpeg.setProgress((p) => {
+          console.log('ratio', p);
+          // setProgressRatio(p.ratio);
+          progressRatio.current = p.ratio;
+        });
+      } catch (e) {
+        console.log('error loading ffmpeg', e);
+      }
     } else {
+      console.log('ffmpeg loaded');
+      setReady(true);
     }
-    setReady(true);
   };
 
   useEffect(() => {
-    load();
+     load();
   }, []); // only called once
 
   useEffect(() => {
@@ -97,7 +103,7 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>Succinct Cut</h1>
         {user === null && <h3>Please log in</h3>}
-        {ready ? (
+        {ready && user !== null ? (
           <div className="App">
             {video && (
               <video
