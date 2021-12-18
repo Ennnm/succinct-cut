@@ -36,9 +36,9 @@ export default function Home() {
   const [transcription, setTranscription] = useState();
   const progressRatio = useRef(0);
   let user = auth.currentUser;
-  if(user==null){
-    user={uid:'test'}
-  }
+  // if (user == null) {
+  //   user = { uid: 'test' };
+  // }
   console.log('user', user);
   // const [progressRatio, setProgressRatio] = useState(0);
 
@@ -53,15 +53,22 @@ export default function Home() {
 
   const load = async () => {
     if (!ffmpeg.isLoaded()) {
-      await ffmpeg.load();
-      ffmpeg.setProgress((p) => {
-        console.log('ratio', p);
-        // setProgressRatio(p.ratio);
-        progressRatio.current = p.ratio;
-      });
+      console.log('ffmpeg was not loaded');
+      try {
+        await ffmpeg.load().then(() => setReady(true));
+        await ffmpeg.setProgress((p) => {
+          console.log('ratio', p);
+          // setProgressRatio(p.ratio);
+          progressRatio.current = p.ratio;
+        });
+      } catch (e) {
+        console.log('error loading ffmpeg', e);
+        location.reload();
+      }
     } else {
+      console.log('ffmpeg loaded');
+      setReady(true);
     }
-    setReady(true);
   };
 
   useEffect(() => {
@@ -97,7 +104,7 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>Succinct Cut</h1>
         {user === null && <h3>Please log in</h3>}
-        {ready ? (
+        {ready && user !== null ? (
           <div className="App">
             {video && (
               <video
@@ -117,21 +124,22 @@ export default function Home() {
               }}
             />
             <h3>Progress {progressRatio.current} </h3>
-            {/* <p>{JSON.stringify(progressRatio)}</p> */}
-            <button
-              onClick={() => {
-                extractAudioClip(
-                  ffmpeg,
-                  video,
-                  IMPORTFILENAME,
-                  FINALAUDIO,
-                  setAudio
-                );
-              }}
-            >
-              Extract audio
-            </button>
-            <button
+            {video && (
+              <button
+                onClick={() => {
+                  extractAudioClip(
+                    ffmpeg,
+                    video,
+                    IMPORTFILENAME,
+                    FINALAUDIO,
+                    setAudio
+                  );
+                }}
+              >
+                Extract audio
+              </button>
+            )}
+            {/* <button
               onClick={() => {
                 optimiseAudioClip(
                   ffmpeg,
@@ -145,8 +153,8 @@ export default function Home() {
               }}
             >
               Optimise audio
-            </button>
-            {audio && (
+            </button> */}
+            {/* {audio && (
               <button
                 onClick={() => {
                   transcribeClip(ffmpeg, FINALAUDIO, setTranscription);
@@ -154,22 +162,24 @@ export default function Home() {
               >
                 Transcribe
               </button>
+            )} */}
+            {audio && (
+              <button
+                onClick={() => {
+                  cleanClip(
+                    transcription,
+                    ffmpeg,
+                    video,
+                    IMPORTFILENAME,
+                    CONCATFILENAME,
+                    PROCESSEDAUDIOFN,
+                    setCleanedClip
+                  );
+                }}
+              >
+                Clean clip
+              </button>
             )}
-            <button
-              onClick={() => {
-                cleanClip(
-                  transcription,
-                  ffmpeg,
-                  video,
-                  IMPORTFILENAME,
-                  CONCATFILENAME,
-                  PROCESSEDAUDIOFN,
-                  setCleanedClip
-                );
-              }}
-            >
-              Clean clip
-            </button>
             {audio && <video controls width="250" src={audio}></video>}
             {transcription && <p>{JSON.stringify(transcription)}</p>}
             {cleanedClip && (
