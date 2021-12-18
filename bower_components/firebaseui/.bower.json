@@ -1,0 +1,37 @@
+{
+  "name": "firebaseui",
+  "version": "6.0.0",
+  "description": "Javascript library for customizable UI on top of Firebase SDK",
+  "main": [
+    "./dist/firebaseui.js",
+    "./dist/firebaseui.css"
+  ],
+  "authors": [
+    "Google"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "Firebase",
+    "authentication"
+  ],
+  "homepage": "https://github.com/firebase/firebaseui-web",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "generated",
+    "out"
+  ],
+  "dependencies": {
+    "firebase": "^9.1.3"
+  },
+  "_release": "6.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v6.0.0",
+    "commit": "56ab8bf88690a048e678e466f6de4962192b3b8a"
+  },
+  "_source": "https://github.com/firebase/firebaseui-web.git",
+  "_target": "^6.0.0",
+  "_originalSource": "firebaseui",
+  "_direct": true
+}

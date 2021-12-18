@@ -1,30 +1,48 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
-import { cleanClip } from '../components/editor/clip-handlers/cleanClip';
-import { extractAudioClip } from '../components/editor/clip-handlers/extractAudioClip';
-import { optimiseAudioClip } from '../components/editor/clip-handlers/optimiseAudioClip';
-import { transcribeClip } from '../components/editor/clip-handlers/transcribeToClip';
+import { cleanClip } from '../lib/clip-handlers/cleanClip';
+import { extractAudioClip } from '../lib/clip-handlers/extractAudioClip';
+import { optimiseAudioClip } from '../lib/clip-handlers/optimiseAudioClip';
+import { transcribeClip } from '../lib/clip-handlers/transcribeToClip';
 
-import { transcript } from '../components/editor/videoprocessing/transcript_2_flac_narrowband';
+import { transcript } from '../lib/videoprocessing/transcript_2_flac_narrowband';
 
+import { Loader } from '../components/Loader';
+// ============FIREBASE=============
+import {
+  getFirestore,
+  connectFirestoreEmulator,
+  doc,
+  onSnapshot,
+} from 'firebase/firestore';
+//import needed to get firebase initiated
+import { firestore, auth } from '../lib/firebase';
+
+// ============FIREBASE=============
 const ffmpeg = createFFmpeg({
   corePath: '/ffmpeg-core/ffmpeg-core.js',
 });
 export default function Home() {
+  // const { user, username } = useContext(UserContext);
+
   const [ready, setReady] = useState(false);
   const [video, setVideo] = useState();
-  const [clip, setClip] = useState();
-  const [images, setImages] = useState();
+  const [audio, setAudio] = useState();
   const [cleanedClip, setCleanedClip] = useState();
+  const [transcription, setTranscription] = useState();
   const progressRatio = useRef(0);
+  let user = auth.currentUser;
+  if(user==null){
+    user={uid:'test'}
+  }
+  console.log('user', user);
   // const [progressRatio, setProgressRatio] = useState(0);
 
-  //temporary transcript
-  const [transcription, setTranscription] = useState(transcript);
+  // temporary transcript
 
   const IMPORTFILENAME = 'test.mp4';
   const AUDIOFILENAME = 'test.aac';
@@ -34,12 +52,15 @@ export default function Home() {
   let CONCATFILENAME = '';
 
   const load = async () => {
-    await ffmpeg.load();
-    await ffmpeg.setProgress((p) => {
-      console.log('ratio', p);
-      // setProgressRatio(p.ratio);
-      progressRatio.current = p.ratio;
-    });
+    if (!ffmpeg.isLoaded()) {
+      await ffmpeg.load();
+      ffmpeg.setProgress((p) => {
+        console.log('ratio', p);
+        // setProgressRatio(p.ratio);
+        progressRatio.current = p.ratio;
+      });
+    } else {
+    }
     setReady(true);
   };
 
@@ -47,6 +68,24 @@ export default function Home() {
     load();
   }, []); // only called once
 
+  useEffect(() => {
+    //check auth for user
+    if (user !== null) {
+      const userUid = user.uid;
+      console.log('userUid', userUid);
+      const unsub = onSnapshot(
+        doc(firestore, 'transcripts', userUid),
+        (doc) => {
+          if (doc.data() !== undefined && 'response' in doc.data()) {
+            console.log('currentdata:2', JSON.parse(doc.data().response));
+            setTranscription(JSON.parse(doc.data().response).result);
+          }
+        }
+      );
+    } else {
+      console.log('no user logged in, please log in');
+    }
+  }, [audio]);
   return (
     <div className={styles.container}>
       <Head>
@@ -57,6 +96,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Succinct Cut</h1>
+        {user === null && <h3>Please log in</h3>}
         {ready ? (
           <div className="App">
             {video && (
@@ -76,7 +116,7 @@ export default function Home() {
                 );
               }}
             />
-            <h3>Progress {progressRatio.current} %</h3>
+            <h3>Progress {progressRatio.current} </h3>
             {/* <p>{JSON.stringify(progressRatio)}</p> */}
             <button
               onClick={() => {
@@ -85,7 +125,7 @@ export default function Home() {
                   video,
                   IMPORTFILENAME,
                   FINALAUDIO,
-                  setClip
+                  setAudio
                 );
               }}
             >
@@ -100,13 +140,13 @@ export default function Home() {
                   AUDIOFILENAME,
                   CONCATFILENAME,
                   FINALAUDIO,
-                  setClip
+                  setAudio
                 );
               }}
             >
               Optimise audio
             </button>
-            {clip && (
+            {audio && (
               <button
                 onClick={() => {
                   transcribeClip(ffmpeg, FINALAUDIO, setTranscription);
@@ -130,14 +170,15 @@ export default function Home() {
             >
               Clean clip
             </button>
-            {clip && <video controls width="250" src={clip}></video>}
+            {audio && <video controls width="250" src={audio}></video>}
             {transcription && <p>{JSON.stringify(transcription)}</p>}
             {cleanedClip && (
               <video controls width="250" src={cleanedClip}></video>
             )}
           </div>
         ) : (
-          <p>Loading...</p>
+          <Loader show={true} />
+          // <p>Loading...</p>
         )}
         <div className={styles.grid}></div>
       </main>

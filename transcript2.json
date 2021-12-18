@@ -1,1 +1,312 @@
-[{"result_index":0,"results":[{"final":true,"end_of_utterance":"silence","alternatives":[{"transcript":"this call ","confidence":0.45,"timestamps":[["this",0.36,0.49],["call",0.49,0.75]]}]},{"final":true,"end_of_utterance":"silence","alternatives":[{"transcript":"yeah recording ","confidence":0.61,"timestamps":[["yeah",2.58,2.79],["recording",2.79,3.35]]}]},{"final":true,"end_of_utterance":"silence","alternatives":[{"transcript":"I need this and then ","confidence":0.76,"timestamps":[["%HESITATION",6.72,7.5],["I",7.5,7.53],["need",7.92,8.67],["this",8.67,9.07],["and",9.07,9.37],["then",9.37,9.7]]}]},{"final":true,"end_of_utterance":"silence","alternatives":[{"transcript":"so ","confidence":0.92,"timestamps":[["so",10.68,11.35]]}]},{"final":true,"end_of_utterance":"silence","alternatives":[{"transcript":"maybe if you do that ","confidence":0.46,"timestamps":[["maybe",13,13.35],["if",13.35,13.48],["you",13.48,13.63],["do",13.63,14.06],["that",14.09,14.48]]}]},{"final":true,"end_of_utterance":"silence","alternatives":[{"transcript":" ","confidence":0.99,"timestamps":[["%HESITATION",16.24,17.03]]}]},{"final":true,"end_of_utterance":"silence","alternatives":[{"transcript":"yeah ","confidence":0.93,"timestamps":[["yeah",20.22,20.67]]}]},{"final":true,"end_of_utterance":"silence","alternatives":[{"transcript":"yeah ","confidence":0.21,"timestamps":[["yeah",22.25,22.76]]}]},{"final":true,"end_of_utterance":"silence","alternatives":[{"transcript":"that should be it should be our office within ","confidence":0.52,"timestamps":[["that",24.4,24.6],["should",24.6,24.75],["be",24.75,24.87],["it",25.25,25.39],["should",25.39,25.52],["be",25.52,25.65],["our",25.65,25.75],["office",25.75,26.16],["within",26.16,26.52]]}]},{"final":true,"end_of_utterance":"end_of_data","alternatives":[{"transcript":"you can try ","confidence":0.74,"timestamps":[["you",27.56,27.74],["can",27.74,27.9],["try",27.9,28.4]]}]}],"speaker_labels":[{"from":0.36,"to":0.49,"speaker":0,"confidence":0.5,"final":false},{"from":0.49,"to":0.75,"speaker":0,"confidence":0.5,"final":false},{"from":2.58,"to":2.79,"speaker":0,"confidence":0.57,"final":false},{"from":2.79,"to":3.35,"speaker":0,"confidence":0.57,"final":false},{"from":6.72,"to":7.5,"speaker":1,"confidence":0.43,"final":false},{"from":7.5,"to":7.53,"speaker":1,"confidence":0.43,"final":false},{"from":7.92,"to":8.67,"speaker":1,"confidence":0.59,"final":false},{"from":8.67,"to":9.07,"speaker":1,"confidence":0.59,"final":false},{"from":9.07,"to":9.37,"speaker":1,"confidence":0.59,"final":false},{"from":9.37,"to":9.7,"speaker":1,"confidence":0.59,"final":false},{"from":10.68,"to":11.35,"speaker":1,"confidence":0.53,"final":false},{"from":13,"to":13.35,"speaker":1,"confidence":0.42,"final":false},{"from":13.35,"to":13.48,"speaker":1,"confidence":0.42,"final":false},{"from":13.48,"to":13.63,"speaker":1,"confidence":0.42,"final":false},{"from":13.63,"to":14.06,"speaker":1,"confidence":0.42,"final":false},{"from":14.09,"to":14.48,"speaker":1,"confidence":0.4,"final":false},{"from":16.24,"to":17.03,"speaker":1,"confidence":0.47,"final":false},{"from":20.22,"to":20.67,"speaker":1,"confidence":0.39,"final":false},{"from":22.25,"to":22.76,"speaker":1,"confidence":0.38,"final":false},{"from":24.4,"to":24.6,"speaker":0,"confidence":0.6,"final":false},{"from":24.6,"to":24.75,"speaker":0,"confidence":0.6,"final":false},{"from":24.75,"to":24.87,"speaker":0,"confidence":0.6,"final":false},{"from":25.25,"to":25.39,"speaker":0,"confidence":0.62,"final":false},{"from":25.39,"to":25.52,"speaker":0,"confidence":0.62,"final":false},{"from":25.52,"to":25.65,"speaker":0,"confidence":0.62,"final":false},{"from":25.65,"to":25.75,"speaker":0,"confidence":0.62,"final":false},{"from":25.75,"to":26.16,"speaker":0,"confidence":0.62,"final":false},{"from":26.16,"to":26.52,"speaker":0,"confidence":0.62,"final":false},{"from":27.56,"to":27.74,"speaker":0,"confidence":0.51,"final":false},{"from":27.74,"to":27.9,"speaker":0,"confidence":0.51,"final":false},{"from":27.9,"to":28.4,"speaker":0,"confidence":0.51,"final":true}]}]
+[{
+  "result_index": 0,
+  "results": [{
+    "final": true,
+    "end_of_utterance": "silence",
+    "alternatives": [{
+      "transcript": "this call ",
+      "confidence": 0.45,
+      "timestamps": [
+        ["this", 0.36, 0.49],
+        ["call", 0.49, 0.75]
+      ]
+    }]
+  }, {
+    "final": true,
+    "end_of_utterance": "silence",
+    "alternatives": [{
+      "transcript": "yeah recording ",
+      "confidence": 0.61,
+      "timestamps": [
+        ["yeah", 2.58, 2.79],
+        ["recording", 2.79, 3.35]
+      ]
+    }]
+  }, {
+    "final": true,
+    "end_of_utterance": "silence",
+    "alternatives": [{
+      "transcript": "I need this and then ",
+      "confidence": 0.76,
+      "timestamps": [
+        ["%HESITATION", 6.72, 7.5],
+        ["I", 7.5, 7.53],
+        ["need", 7.92, 8.67],
+        ["this", 8.67, 9.07],
+        ["and", 9.07, 9.37],
+        ["then", 9.37, 9.7]
+      ]
+    }]
+  }, {
+    "final": true,
+    "end_of_utterance": "silence",
+    "alternatives": [{
+      "transcript": "so ",
+      "confidence": 0.92,
+      "timestamps": [
+        ["so", 10.68, 11.35]
+      ]
+    }]
+  }, {
+    "final": true,
+    "end_of_utterance": "silence",
+    "alternatives": [{
+      "transcript": "maybe if you do that ",
+      "confidence": 0.46,
+      "timestamps": [
+        ["maybe", 13, 13.35],
+        ["if", 13.35, 13.48],
+        ["you", 13.48, 13.63],
+        ["do", 13.63, 14.06],
+        ["that", 14.09, 14.48]
+      ]
+    }]
+  }, {
+    "final": true,
+    "end_of_utterance": "silence",
+    "alternatives": [{
+      "transcript": " ",
+      "confidence": 0.99,
+      "timestamps": [
+        ["%HESITATION", 16.24, 17.03]
+      ]
+    }]
+  }, {
+    "final": true,
+    "end_of_utterance": "silence",
+    "alternatives": [{
+      "transcript": "yeah ",
+      "confidence": 0.93,
+      "timestamps": [
+        ["yeah", 20.22, 20.67]
+      ]
+    }]
+  }, {
+    "final": true,
+    "end_of_utterance": "silence",
+    "alternatives": [{
+      "transcript": "yeah ",
+      "confidence": 0.21,
+      "timestamps": [
+        ["yeah", 22.25, 22.76]
+      ]
+    }]
+  }, {
+    "final": true,
+    "end_of_utterance": "silence",
+    "alternatives": [{
+      "transcript": "that should be it should be our office within ",
+      "confidence": 0.52,
+      "timestamps": [
+        ["that", 24.4, 24.6],
+        ["should", 24.6, 24.75],
+        ["be", 24.75, 24.87],
+        ["it", 25.25, 25.39],
+        ["should", 25.39, 25.52],
+        ["be", 25.52, 25.65],
+        ["our", 25.65, 25.75],
+        ["office", 25.75, 26.16],
+        ["within", 26.16, 26.52]
+      ]
+    }]
+  }, {
+    "final": true,
+    "end_of_utterance": "end_of_data",
+    "alternatives": [{
+      "transcript": "you can try ",
+      "confidence": 0.74,
+      "timestamps": [
+        ["you", 27.56, 27.74],
+        ["can", 27.74, 27.9],
+        ["try", 27.9, 28.4]
+      ]
+    }]
+  }],
+  "speaker_labels": [{
+    "from": 0.36,
+    "to": 0.49,
+    "speaker": 0,
+    "confidence": 0.5,
+    "final": false
+  }, {
+    "from": 0.49,
+    "to": 0.75,
+    "speaker": 0,
+    "confidence": 0.5,
+    "final": false
+  }, {
+    "from": 2.58,
+    "to": 2.79,
+    "speaker": 0,
+    "confidence": 0.57,
+    "final": false
+  }, {
+    "from": 2.79,
+    "to": 3.35,
+    "speaker": 0,
+    "confidence": 0.57,
+    "final": false
+  }, {
+    "from": 6.72,
+    "to": 7.5,
+    "speaker": 1,
+    "confidence": 0.43,
+    "final": false
+  }, {
+    "from": 7.5,
+    "to": 7.53,
+    "speaker": 1,
+    "confidence": 0.43,
+    "final": false
+  }, {
+    "from": 7.92,
+    "to": 8.67,
+    "speaker": 1,
+    "confidence": 0.59,
+    "final": false
+  }, {
+    "from": 8.67,
+    "to": 9.07,
+    "speaker": 1,
+    "confidence": 0.59,
+    "final": false
+  }, {
+    "from": 9.07,
+    "to": 9.37,
+    "speaker": 1,
+    "confidence": 0.59,
+    "final": false
+  }, {
+    "from": 9.37,
+    "to": 9.7,
+    "speaker": 1,
+    "confidence": 0.59,
+    "final": false
+  }, {
+    "from": 10.68,
+    "to": 11.35,
+    "speaker": 1,
+    "confidence": 0.53,
+    "final": false
+  }, {
+    "from": 13,
+    "to": 13.35,
+    "speaker": 1,
+    "confidence": 0.42,
+    "final": false
+  }, {
+    "from": 13.35,
+    "to": 13.48,
+    "speaker": 1,
+    "confidence": 0.42,
+    "final": false
+  }, {
+    "from": 13.48,
+    "to": 13.63,
+    "speaker": 1,
+    "confidence": 0.42,
+    "final": false
+  }, {
+    "from": 13.63,
+    "to": 14.06,
+    "speaker": 1,
+    "confidence": 0.42,
+    "final": false
+  }, {
+    "from": 14.09,
+    "to": 14.48,
+    "speaker": 1,
+    "confidence": 0.4,
+    "final": false
+  }, {
+    "from": 16.24,
+    "to": 17.03,
+    "speaker": 1,
+    "confidence": 0.47,
+    "final": false
+  }, {
+    "from": 20.22,
+    "to": 20.67,
+    "speaker": 1,
+    "confidence": 0.39,
+    "final": false
+  }, {
+    "from": 22.25,
+    "to": 22.76,
+    "speaker": 1,
+    "confidence": 0.38,
+    "final": false
+  }, {
+    "from": 24.4,
+    "to": 24.6,
+    "speaker": 0,
+    "confidence": 0.6,
+    "final": false
+  }, {
+    "from": 24.6,
+    "to": 24.75,
+    "speaker": 0,
+    "confidence": 0.6,
+    "final": false
+  }, {
+    "from": 24.75,
+    "to": 24.87,
+    "speaker": 0,
+    "confidence": 0.6,
+    "final": false
+  }, {
+    "from": 25.25,
+    "to": 25.39,
+    "speaker": 0,
+    "confidence": 0.62,
+    "final": false
+  }, {
+    "from": 25.39,
+    "to": 25.52,
+    "speaker": 0,
+    "confidence": 0.62,
+    "final": false
+  }, {
+    "from": 25.52,
+    "to": 25.65,
+    "speaker": 0,
+    "confidence": 0.62,
+    "final": false
+  }, {
+    "from": 25.65,
+    "to": 25.75,
+    "speaker": 0,
+    "confidence": 0.62,
+    "final": false
+  }, {
+    "from": 25.75,
+    "to": 26.16,
+    "speaker": 0,
+    "confidence": 0.62,
+    "final": false
+  }, {
+    "from": 26.16,
+    "to": 26.52,
+    "speaker": 0,
+    "confidence": 0.62,
+    "final": false
+  }, {
+    "from": 27.56,
+    "to": 27.74,
+    "speaker": 0,
+    "confidence": 0.51,
+    "final": false
+  }, {
+    "from": 27.74,
+    "to": 27.9,
+    "speaker": 0,
+    "confidence": 0.51,
+    "final": false
+  }, {
+    "from": 27.9,
+    "to": 28.4,
+    "speaker": 0,
+    "confidence": 0.51,
+    "final": true
+  }]
+}]
