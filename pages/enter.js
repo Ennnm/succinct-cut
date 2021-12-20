@@ -14,7 +14,6 @@ export default function Enter(props) {
 }
 
 const signInWithGoogle = async () => {
-  console.log('hey pressed the button!');
   try {
     signInWithPopup(auth, googleAuthProvider)
       .then((result) => {

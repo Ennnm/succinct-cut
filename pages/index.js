@@ -80,6 +80,7 @@ export default function Home() {
     if (user !== null) {
       const userUid = user.uid;
       console.log('userUid', userUid);
+      //listen for transcript
       const unsub = onSnapshot(
         doc(firestore, 'transcripts', userUid),
         (doc) => {
@@ -125,35 +126,38 @@ export default function Home() {
             />
             <h3>Progress {progressRatio.current} </h3>
             {video && (
-              <button
-                onClick={() => {
-                  extractAudioClip(
-                    ffmpeg,
-                    video,
-                    IMPORTFILENAME,
-                    FINALAUDIO,
-                    setAudio
-                  );
-                }}
-              >
-                Extract audio
-              </button>
+              <>
+                <button
+                  onClick={() => {
+                    extractAudioClip(
+                      ffmpeg,
+                      video,
+                      IMPORTFILENAME,
+                      FINALAUDIO,
+                      setAudio
+                    );
+                  }}
+                >
+                  Extract audio
+                </button>
+                <button
+                  onClick={() => {
+                    optimiseAudioClip(
+                      ffmpeg,
+                      video,
+                      IMPORTFILENAME,
+                      AUDIOFILENAME,
+                      CONCATFILENAME,
+                      FINALAUDIO,
+                      setAudio
+                    );
+                  }}
+                >
+                  Optimise audio
+                </button>
+              </>
             )}
-            {/* <button
-              onClick={() => {
-                optimiseAudioClip(
-                  ffmpeg,
-                  video,
-                  IMPORTFILENAME,
-                  AUDIOFILENAME,
-                  CONCATFILENAME,
-                  FINALAUDIO,
-                  setAudio
-                );
-              }}
-            >
-              Optimise audio
-            </button> */}
+
             {/* {audio && (
               <button
                 onClick={() => {
