@@ -2,14 +2,12 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import { useEffect, useState, useRef, useContext } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { cleanClip } from '../lib/clip-handlers/cleanClip';
 import { extractAudioClip } from '../lib/clip-handlers/extractAudioClip';
 import { optimiseAudioClip } from '../lib/clip-handlers/optimiseAudioClip';
-import { transcribeClip } from '../lib/clip-handlers/transcribeToClip';
-
-import { transcript } from '../lib/videoprocessing/transcript_2_flac_narrowband';
 
 import { Loader } from '../components/Loader';
 // ============FIREBASE=============
@@ -31,10 +29,13 @@ export default function Home() {
 
   const [ready, setReady] = useState(false);
   const [video, setVideo] = useState();
+  const [audioUuid, setAudioUuid] = useState();
   const [audio, setAudio] = useState();
   const [cleanedClip, setCleanedClip] = useState();
   const [transcription, setTranscription] = useState();
-  const progressRatio = useRef(0);
+  const ffmpegRatio = useRef(0);
+  const [processStage, setProcessStage] = useState();
+  const [processRatio, setProcessRatio] = useState(1);
   let user = auth.currentUser;
   // if (user == null) {
   //   user = { uid: 'test' };
@@ -43,10 +44,8 @@ export default function Home() {
   // const [progressRatio, setProgressRatio] = useState(0);
 
   // temporary transcript
-
   const IMPORTFILENAME = 'test.mp4';
   const AUDIOFILENAME = 'test.aac';
-  const SILENCESFILENAME = 'silence.txt';
   const FINALAUDIO = 'finalAudio.aac';
   const PROCESSEDAUDIOFN = 'finalcut.mp4';
   let CONCATFILENAME = '';
@@ -59,7 +58,7 @@ export default function Home() {
         await ffmpeg.setProgress((p) => {
           console.log('ratio', p);
           // setProgressRatio(p.ratio);
-          progressRatio.current = p.ratio;
+          ffmpegRatio.current = p.ratio;
         });
       } catch (e) {
         console.log('error loading ffmpeg', e);
@@ -81,15 +80,13 @@ export default function Home() {
       const userUid = user.uid;
       console.log('userUid', userUid);
       //listen for transcript
-      const unsub = onSnapshot(
-        doc(firestore, 'transcripts', userUid),
-        (doc) => {
-          if (doc.data() !== undefined && 'response' in doc.data()) {
-            console.log('currentdata:2', JSON.parse(doc.data().response));
-            setTranscription(JSON.parse(doc.data().response).result);
-          }
+      const unsub = onSnapshot(doc(firestore, 'users', userUid, 'transcript',audioUuid ), (doc) => {
+        if (doc.data() !== undefined && 'response' in doc.data()) {
+          console.log('currentdata:2', JSON.parse(doc.data().response));
+          setTranscription(JSON.parse(doc.data().response).result);
         }
-      );
+      });
+      setProcessStage('Analysed audio');
     } else {
       console.log('no user logged in, please log in');
     }
@@ -118,13 +115,25 @@ export default function Home() {
               type="file"
               onChange={(e) => {
                 setVideo(e.target.files?.item(0));
+                //create new uuid for audio filename to be saved
+                setAudioUuid(uuidv4());
                 console.log(
                   'e.target.files?.item(0) :>> ',
                   e.target.files?.item(0)
                 );
               }}
             />
-            <h3>Progress {progressRatio.current} </h3>
+            {processStage && (
+              <>
+                <h3>{processStage}</h3>
+                {processRatio !== 1 && (
+                  <h3>progress {(processRatio * 100).toFixed(0)} %</h3>
+                )}
+                {ffmpegRatio.current !== 1 && (
+                  <h3>ffmpeg progress {ffmpegRatio.current}</h3>
+                )}
+              </>
+            )}
             {video && (
               <>
                 <button
@@ -132,9 +141,11 @@ export default function Home() {
                     extractAudioClip(
                       ffmpeg,
                       video,
-                      IMPORTFILENAME,
                       FINALAUDIO,
-                      setAudio
+                      setAudio,
+                      audioUuid,
+                      setProcessStage,
+                      setProcessRatio
                     );
                   }}
                 >
@@ -145,9 +156,7 @@ export default function Home() {
                     optimiseAudioClip(
                       ffmpeg,
                       video,
-                      IMPORTFILENAME,
                       AUDIOFILENAME,
-                      CONCATFILENAME,
                       FINALAUDIO,
                       setAudio
                     );
@@ -157,16 +166,6 @@ export default function Home() {
                 </button>
               </>
             )}
-
-            {/* {audio && (
-              <button
-                onClick={() => {
-                  transcribeClip(ffmpeg, FINALAUDIO, setTranscription);
-                }}
-              >
-                Transcribe
-              </button>
-            )} */}
             {audio && (
               <button
                 onClick={() => {
@@ -174,10 +173,9 @@ export default function Home() {
                     transcription,
                     ffmpeg,
                     video,
-                    IMPORTFILENAME,
-                    CONCATFILENAME,
                     PROCESSEDAUDIOFN,
-                    setCleanedClip
+                    setCleanedClip,
+                    setProcessStage
                   );
                 }}
               >
