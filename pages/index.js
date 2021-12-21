@@ -93,6 +93,7 @@ export default function Home() {
           if (doc.data() !== undefined && 'response' in doc.data()) {
             console.log('currentdata:', JSON.parse(doc.data().response));
             setTranscription(JSON.parse(doc.data().response).result);
+            timeStampAtStage(stage.ANALYSED_AUDIO);
           }
         }
       );
@@ -101,7 +102,6 @@ export default function Home() {
       const deleteStatus = deleteDoc(
         doc(firestore, 'users', userUid, 'transcript', audioUuid)
       );
-      timeStampAtStage(stage.ANALYSED_AUDIO);
     } else {
       console.log('no user logged in, please log in');
     }
@@ -142,7 +142,7 @@ export default function Home() {
               <>
                 <h3>{processStage.at(-1)}</h3>
                 <h3>Time taken: {timeTaken.at(-1) - timeTaken.at(0)} ms</h3>
-                <h3>TimeStamps: {timeTaken.join(' ms, ')} ms </h3>
+                {/* <h3>TimeStamps: {timeTaken.join(' ms, ')} ms </h3> */}
                 {/* {processRatio !== 1 && (
                   <h3>progress {(processRatio * 100).toFixed(0)} %</h3>
                 )} */}
