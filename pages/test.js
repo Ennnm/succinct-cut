@@ -11,8 +11,6 @@ import { optimiseAudioClip } from '../lib/clip-handlers/optimiseAudioClip';
 import * as stage from '../lib/clip-handlers/stage-constants';
 
 import { Loader } from '../components/Loader';
-import { ffmpegContext, UserContext } from '../lib/context';
-
 // ============FIREBASE=============
 import {
   getFirestore,
@@ -27,14 +25,17 @@ import {
 } from 'firebase/firestore';
 //import needed to get firebase initiated
 import { firestore, auth } from '../lib/firebase';
-
+import { ffmpegContext, UserContext } from '../lib/context';
 // ============FIREBASE=============
-const ffmpeg = createFFmpeg({
-  corePath: '/ffmpeg-core/ffmpeg-core.js',
-});
-export default function Home() {
-  // const { user, username } = useContext(UserContext);
-  // const ffmpeg = useContext(ffmpegContext);
+// const ffmpeg = createFFmpeg({
+//   corePath: '/ffmpeg-core/ffmpeg-core.js',
+// });
+export default function Test() {
+  const { user, username } = useContext(UserContext);
+  const ffmpeg = useContext(ffmpegContext);
+
+  console.log('user in test', user);
+  console.log('ffmpeg', ffmpeg);
 
   const [ready, setReady] = useState(false);
   const [video, setVideo] = useState();
@@ -46,8 +47,9 @@ export default function Home() {
   const [processStage, setProcessStage] = useState([]);
   const [timeTaken, setTimeTaken] = useState([]);
   const [processRatio, setProcessRatio] = useState(1);
-  let user = auth.currentUser;
+  // let user = auth.currentUser;
 
+  console.log('user', user);
   const AUDIOFILENAME = 'test.aac';
   const FINALAUDIO = 'finalAudio.aac';
   const PROCESSEDAUDIOFN = 'finalcut.mp4';
@@ -71,7 +73,8 @@ export default function Home() {
         });
       } catch (e) {
         console.log('error loading ffmpeg', e);
-        location.reload();
+        // setReady(false);
+        // location.reload();
       }
     } else {
       console.log('ffmpeg loaded');
@@ -82,7 +85,7 @@ export default function Home() {
   useEffect(() => {
     load();
   }, []); // only called once
-
+  console.log('ready', ready);
   useEffect(() => {
     //check auth for user
     if (user !== null && audioUuid !== null) {
