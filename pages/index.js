@@ -8,6 +8,7 @@ import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { cleanClip } from '../lib/clip-handlers/cleanClip';
 import { extractAudioClip } from '../lib/clip-handlers/extractAudioClip';
 import { optimiseAudioClip } from '../lib/clip-handlers/optimiseAudioClip';
+import * as stage from '../lib/clip-handlers/stage-constants';
 
 import { Loader } from '../components/Loader';
 // ============FIREBASE=============
@@ -34,21 +35,24 @@ export default function Home() {
   const [cleanedClip, setCleanedClip] = useState();
   const [transcription, setTranscription] = useState();
   const ffmpegRatio = useRef(0);
-  const [processStage, setProcessStage] = useState();
+  const [processStage, setProcessStage] = useState([]);
+  const [timeTaken, setTimeTaken] = useState([]);
   const [processRatio, setProcessRatio] = useState(1);
   let user = auth.currentUser;
-  // if (user == null) {
-  //   user = { uid: 'test' };
-  // }
-  console.log('user', user);
-  // const [progressRatio, setProgressRatio] = useState(0);
 
-  // temporary transcript
-  const IMPORTFILENAME = 'test.mp4';
+  console.log('user', user);
   const AUDIOFILENAME = 'test.aac';
   const FINALAUDIO = 'finalAudio.aac';
   const PROCESSEDAUDIOFN = 'finalcut.mp4';
-  let CONCATFILENAME = '';
+
+  const timeStampAtStage = (stage) => {
+    console.log('stage', processStage);
+    console.log('timeTaken', timeTaken);
+    const currTime = Math.round(+new Date());
+
+    setTimeTaken([...timeTaken, currTime]);
+    setProcessStage([...processStage, stage]);
+  };
 
   const load = async () => {
     if (!ffmpeg.isLoaded()) {
@@ -80,13 +84,16 @@ export default function Home() {
       const userUid = user.uid;
       console.log('userUid', userUid);
       //listen for transcript
-      const unsub = onSnapshot(doc(firestore, 'users', userUid, 'transcript',audioUuid ), (doc) => {
-        if (doc.data() !== undefined && 'response' in doc.data()) {
-          console.log('currentdata:2', JSON.parse(doc.data().response));
-          setTranscription(JSON.parse(doc.data().response).result);
+      const unsub = onSnapshot(
+        doc(firestore, 'users', userUid, 'transcript', audioUuid),
+        (doc) => {
+          if (doc.data() !== undefined && 'response' in doc.data()) {
+            console.log('currentdata:2', JSON.parse(doc.data().response));
+            setTranscription(JSON.parse(doc.data().response).result);
+          }
         }
-      });
-      setProcessStage('Analysed audio');
+      );
+      timeStampAtStage(stage.ANALYSED_AUDIO);
     } else {
       console.log('no user logged in, please log in');
     }
@@ -123,12 +130,14 @@ export default function Home() {
                 );
               }}
             />
-            {processStage && (
+            {processStage.length > 0 && (
               <>
-                <h3>{processStage}</h3>
-                {processRatio !== 1 && (
+                <h3>{processStage.at(-1)}</h3>
+                <h3>Time taken: {timeTaken.at(-1) - timeTaken.at(0)} ms</h3>
+                {/* {processRatio !== 1 && (
                   <h3>progress {(processRatio * 100).toFixed(0)} %</h3>
-                )}
+                )} */}
+
                 {ffmpegRatio.current !== 1 && (
                   <h3>ffmpeg progress {ffmpegRatio.current}</h3>
                 )}
@@ -145,8 +154,11 @@ export default function Home() {
                       setAudio,
                       audioUuid,
                       setProcessStage,
-                      setProcessRatio
+                      setProcessRatio,
+                      timeStampAtStage
                     );
+                    setProcessStage([]);
+                    setTimeTaken([]);
                   }}
                 >
                   Extract audio
@@ -175,7 +187,7 @@ export default function Home() {
                     video,
                     PROCESSEDAUDIOFN,
                     setCleanedClip,
-                    setProcessStage
+                    timeStampAtStage
                   );
                 }}
               >
