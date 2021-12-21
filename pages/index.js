@@ -16,7 +16,12 @@ import {
   getFirestore,
   connectFirestoreEmulator,
   doc,
+  deleteDoc,
   onSnapshot,
+  query,
+  where,
+  getDocs,
+  collection,
 } from 'firebase/firestore';
 //import needed to get firebase initiated
 import { firestore, auth } from '../lib/firebase';
@@ -46,10 +51,8 @@ export default function Home() {
   const PROCESSEDAUDIOFN = 'finalcut.mp4';
 
   const timeStampAtStage = (stage) => {
-    console.log('stage', processStage);
-    console.log('timeTaken', timeTaken);
     const currTime = Math.round(+new Date());
-
+    // can be combined
     setTimeTaken([...timeTaken, currTime]);
     setProcessStage([...processStage, stage]);
   };
@@ -80,7 +83,7 @@ export default function Home() {
 
   useEffect(() => {
     //check auth for user
-    if (user !== null) {
+    if (user !== null && audioUuid !== null) {
       const userUid = user.uid;
       console.log('userUid', userUid);
       //listen for transcript
@@ -88,10 +91,15 @@ export default function Home() {
         doc(firestore, 'users', userUid, 'transcript', audioUuid),
         (doc) => {
           if (doc.data() !== undefined && 'response' in doc.data()) {
-            console.log('currentdata:2', JSON.parse(doc.data().response));
+            console.log('currentdata:', JSON.parse(doc.data().response));
             setTranscription(JSON.parse(doc.data().response).result);
           }
         }
+      );
+
+      // deleting transcript takes time
+      const deleteStatus = deleteDoc(
+        doc(firestore, 'users', userUid, 'transcript', audioUuid)
       );
       timeStampAtStage(stage.ANALYSED_AUDIO);
     } else {
@@ -134,6 +142,7 @@ export default function Home() {
               <>
                 <h3>{processStage.at(-1)}</h3>
                 <h3>Time taken: {timeTaken.at(-1) - timeTaken.at(0)} ms</h3>
+                <h3>TimeStamps: {timeTaken.join(' ms, ')} ms </h3>
                 {/* {processRatio !== 1 && (
                   <h3>progress {(processRatio * 100).toFixed(0)} %</h3>
                 )} */}
