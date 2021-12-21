@@ -1,7 +1,12 @@
 import '../styles/globals.css';
 import Navbar from '../components/Navbar';
-import { UserContext } from '../lib/context';
+import { UserContext, ffmpegContext } from '../lib/context';
 import { useUserData } from '../lib/hooks';
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
+
+const ffmpeg = createFFmpeg({
+  corePath: '/ffmpeg-core/ffmpeg-core.js',
+});
 
 function MyApp({ Component, pageProps }) {
   const userData = useUserData();
@@ -9,10 +14,12 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <UserContext.Provider value={userData}>
-        <Navbar />
-        <Component {...pageProps} />
-      </UserContext.Provider>
+      <ffmpegContext.Provider value={ffmpeg}>
+        <UserContext.Provider value={userData}>
+          <Navbar />
+          <Component {...pageProps} />
+        </UserContext.Provider>
+      </ffmpegContext.Provider>
     </>
   );
 }
