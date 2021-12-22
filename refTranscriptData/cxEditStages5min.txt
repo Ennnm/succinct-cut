@@ -1,0 +1,9 @@
+Loading video: 504
+Extracting audio: 507
+Extracted audio: 15
+Uploading audio: 3
+Analysing audio: 204373
+Analysed audio: 5600
+Processing video: 45
+Cleaning transcript: 3
+Cutting video:
