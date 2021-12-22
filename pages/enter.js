@@ -1,9 +1,13 @@
 import { auth, firestore, googleAuthProvider } from '../lib/firebase';
-import { signInWithPopup, signInAnonymously, signOut } from 'firebase/auth';
+import {
+  signInWithPopup,
+  signInAnonymously,
+  signOut,
+  GoogleAuthProvider,
+} from 'firebase/auth';
 import { UserContext } from '../lib/context';
 //COPY V9 auth code
 
-console.log('signOut', signOut);
 import { useEfect, useState, useCallback, useContext } from 'react';
 
 // Top navbar
@@ -18,7 +22,22 @@ export default function Enter(props) {
 // Sign in with Google button
 function SignInButton() {
   const signInWithGoogle = async () => {
-    await signInWithPopup(auth, googleAuthProvider);
+    await signInWithPopup(auth, googleAuthProvider).catch((error) => {
+      // Handle Errors here.
+      console.log('error :>> ', error);
+      const errorCode = error.code;
+      console.log('errorCode :>> ', errorCode);
+      const errorMessage = error.message;
+      console.log('errorMessage :>> ', errorMessage);
+      // The email of the user's account used.
+      const email = error.email;
+      console.log('email :>> ', email);
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      console.log('credential :>> ', credential);
+
+      // ...
+    });
   };
 
   return (
@@ -32,7 +51,9 @@ function SignInButton() {
 
 const onClickSignOut = (e) => {
   e.preventDefault();
-  signOut(auth);
+  signOut(auth).catch((e) => {
+    console.log('error in signing out');
+  });
 };
 // Sign out button
 function SignOutButton() {

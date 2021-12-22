@@ -1,17 +1,17 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import { useEffect, useState, useRef, useContext } from 'react';
-import { Link } from '@chakra-ui/react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { cleanClip } from '../lib/clip-handlers/cleanClip';
 import { extractAudioClip } from '../lib/clip-handlers/extractAudioClip';
 import * as stage from '../lib/clip-handlers/stage-constants';
+import * as ffmpegProcess from '../lib/videoprocessing/ffmpegProcess';
 
 import { Loader } from '../components/Loader';
 import { ffmpegContext, UserContext } from '../lib/context';
-import { transcript } from '../lib/videoprocessing/transcript_en.js';
-// import { transcript } from '../lib/videoprocessing/transcript_2_flac_narrowband';
+// import { transcript } from '../lib/videoprocessing/transcript_en.js';
+import { transcript } from '../lib/videoprocessing/transcript_2_flac_narrowband';
 // ============FIREBASE=============
 import { doc, deleteDoc, onSnapshot } from 'firebase/firestore';
 //import needed to get firebase initiated
@@ -26,10 +26,9 @@ export default function Home() {
   const [ready, setReady] = useState(false);
   const [video, setVideo] = useState();
   const [audioUuid, setAudioUuid] = useState();
-  const [audio, setAudio] = useState();
   const [cleanedClip, setCleanedClip] = useState();
   //TODO remove trasncript
-  const [transcription, setTranscription] = useState(transcript.result);
+  const [transcription, setTranscription] = useState(transcript);
   const ffmpegRatio = useRef(0);
   const [processStage, setProcessStage] = useState([]);
   const [timeTaken, setTimeTaken] = useState([]);
@@ -97,7 +96,7 @@ export default function Home() {
     } else {
       console.log('no user logged in, please log in');
     }
-  }, [audio]);
+  }, [audioUuid]);
 
   const onBrowseBtnClick = () => {
     inputFile.current.click();
@@ -149,11 +148,12 @@ export default function Home() {
                 onChange={(e) => {
                   setVideo(e.target.files?.item(0));
                   //create new uuid for audio filename to be saved
-                  setAudioUuid(uuidv4());
+                  // setAudioUuid(uuidv4());
                   console.log(
                     'e.target.files?.item(0) :>> ',
                     e.target.files?.item(0)
                   );
+                  ffmpegProcess.removeAllfiles(ffmpeg);
                 }}
               />
               <button className={styles.button} onClick={onBrowseBtnClick}>
@@ -167,9 +167,7 @@ export default function Home() {
                     ffmpeg,
                     video,
                     FINALAUDIO,
-                    setAudio,
-                    audioUuid,
-                    setProcessStage,
+                    setAudioUuid,
                     timeStampAtStage
                   );
                   setProcessStage([]);
@@ -193,7 +191,7 @@ export default function Home() {
                     timeStampAtStage
                   );
                 }}
-                disabled={!transcription}
+                disabled={!transcription || !video}
               >
                 Clean Video
               </button>
