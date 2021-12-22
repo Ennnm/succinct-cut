@@ -19,6 +19,9 @@ import { firestore, auth } from '../lib/firebase';
 
 // ============FIREBASE=============
 
+
+import { Progress, ProgressLabel, Button, Flex } from '@chakra-ui/react'
+
 export default function Home() {
   // const { user, username } = useContext(UserContext);
   const ffmpeg = useContext(ffmpegContext);
@@ -31,8 +34,25 @@ export default function Home() {
   const [transcription, setTranscription] = useState(transcript);
   const ffmpegRatio = useRef(0);
   const [processStage, setProcessStage] = useState([]);
+  const [ progress, setProgress ] = useState(0)
   const [timeTaken, setTimeTaken] = useState([]);
   const [audioAnalysisBegan, setAudioAnalysisBegan] = useState(false);
+  const NORMS = {
+    "Loading video"       : 5,
+    "Extracting audio"    : 5, 
+    "Extracted audio"     : 5, 
+    "Uploading audio"     : 5,
+    "Analysing audio"     : 5, 
+    "Analysed audio"      : 25, 
+    "Processing video"    : 5, 
+    "Cleaning transcript" : 5,
+    "Cutting video"       : 5, 
+    "Speeding up pauses"  : 16,
+    "Preparing to stitch" : 4,
+    "Stitching video"     : 5,
+    "Clearing memory"     : 9,
+    "Completed"           : 1
+  }
   let user = auth.currentUser;
 
   const FINALAUDIO = 'finalAudio.aac';
@@ -46,6 +66,8 @@ export default function Home() {
     // can be combined
     setTimeTaken([...timeTaken, currTime]);
     setProcessStage([...processStage, stage]);
+    setProgress(progress + +NORMS[stage])
+    // console.log("timeTaken", timeTaken)
   };
 
   const load = async () => {
@@ -212,12 +234,11 @@ export default function Home() {
                 Click to download
               </a>
             </div>
-            {processStage.length > 0 && (
-              <>
-                <h3>{processStage.at(-1)}:</h3>
-                <h3>Time taken: {timeTaken.at(-1) - timeTaken.at(0)} ms</h3>
-              </>
-            )}
+            <Flex height={10}>
+              <Progress hh={'xl'} w="90vw" hasStripe isAnimated value={ progress }>
+                <ProgressLabel color="black"> { processStage.at(-1) } | Time taken: {timeTaken.at(-1) - timeTaken.at(0)} ms </ProgressLabel>
+              </Progress>
+            </Flex>
             {transcription && <p>{JSON.stringify(transcription)}</p>}
           </>
         ) : (
