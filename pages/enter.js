@@ -1,8 +1,9 @@
 import { auth, firestore, googleAuthProvider } from '../lib/firebase';
-import { doc, writeBatch, getDoc, getFirestore } from 'firebase/firestore';
 import { signInWithPopup, signInAnonymously, signOut } from 'firebase/auth';
 import { UserContext } from '../lib/context';
 //COPY V9 auth code
+
+console.log('signOut', signOut);
 import { useEfect, useState, useCallback, useContext } from 'react';
 
 // Top navbar
@@ -25,13 +26,16 @@ function SignInButton() {
       <button className="btn-google" onClick={signInWithGoogle}>
         <img src={'/google.png'} width="30px" /> Sign in with Google
       </button>
-      <button onClick={() => signInAnonymously(auth)}>
-        Sign in Anonymously
-      </button>
     </>
   );
 }
+
+const onClickSignOut = (e) => {
+  e.preventDefault();
+  signOut(auth);
+};
 // Sign out button
 function SignOutButton() {
-  return <button onClick={() => signOut(auth)}>Sign Out</button>;
+  return <button onClick={onClickSignOut}>Sign Out</button>;
+  // return <button onClick={() => signOut(auth)}>Sign Out</button>;
 }

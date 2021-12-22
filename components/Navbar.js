@@ -15,7 +15,10 @@ export default function Navbar() {
           </Link>
         </li>
         <li>
-          {user ? <SignOutButton /> : <SignInButton />}
+          <Link href="/enter">
+            <button className="btn-blue">Log in</button>
+          </Link>
+          {/* {user ? <SignOutButton /> : <SignInButton />} */}
         </li>
       </ul>
     </nav>

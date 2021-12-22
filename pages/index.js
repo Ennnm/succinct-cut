@@ -33,6 +33,7 @@ export default function Home() {
   const ffmpegRatio = useRef(0);
   const [processStage, setProcessStage] = useState([]);
   const [timeTaken, setTimeTaken] = useState([]);
+  const [audioAnalysisBegan, setAudioAnalysisBegan] = useState(false);
   let user = auth.currentUser;
 
   const FINALAUDIO = 'finalAudio.aac';
@@ -74,7 +75,7 @@ export default function Home() {
 
   useEffect(() => {
     //check auth for user
-    if (user !== null && audioUuid !== null) {
+    if (user !== null && audioUuid !== null && audioAnalysisBegan) {
       const userUid = user.uid;
       console.log('userUid', userUid);
       //listen for transcript
@@ -173,6 +174,7 @@ export default function Home() {
                   );
                   setProcessStage([]);
                   setTimeTaken([]);
+                  setAudioAnalysisBegan(true);
                 }}
                 disabled={!video}
               >
@@ -206,7 +208,7 @@ export default function Home() {
                 ref={downloadAnchor}
                 href={cleanedClip}
                 download={'result.mp4'}
-                style={{display:'none'}}
+                style={{ display: 'none' }}
               >
                 Click to download
               </a>
