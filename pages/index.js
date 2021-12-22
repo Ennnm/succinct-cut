@@ -31,12 +31,12 @@ export default function Home() {
   const [audioUuid, setAudioUuid] = useState();
   const [cleanedClip, setCleanedClip] = useState();
   //TODO remove trasncript
-  const [transcription, setTranscription] = useState(transcript);
+  const [ transcription, setTranscription] = useState(transcript);
   const ffmpegRatio = useRef(0);
-  const [processStage, setProcessStage] = useState([]);
+  const [ processStage, setProcessStage] = useState([]);
   const [ progress, setProgress ] = useState(0)
-  const [timeTaken, setTimeTaken] = useState([]);
-  const [audioAnalysisBegan, setAudioAnalysisBegan] = useState(false);
+  const [ timeTaken, setTimeTaken] = useState([]);
+  const [ audioAnalysisBegan, setAudioAnalysisBegan] = useState(false);
   const NORMS = {
     "Loading video"       : 5,
     "Extracting audio"    : 5, 
@@ -256,7 +256,7 @@ export default function Home() {
     })
 
     setOptimizedList(oList)
-  }, [transcription])
+  }, [ transcription ])
 
 
   return (
