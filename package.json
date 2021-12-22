@@ -8,12 +8,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.7.3",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
     "@ffmpeg/core": "^0.10.0",
     "@ffmpeg/ffmpeg": "^0.10.1",
     "firebase": "^9.6.1",
     "firebase-admin": "^10.0.1",
     "firebaseui": "^6.0.0",
     "formidable": "^2.0.1",
+    "framer-motion": "^4.1.17",
     "ibm-watson": "^6.2.1",
     "multer": "^1.4.4",
     "multiparty": "^4.2.2",
