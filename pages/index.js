@@ -143,6 +143,7 @@ export default function Home() {
             <div className={styles.grid}>
               <input
                 type="file"
+                accept='.mp4'
                 ref={inputFile}
                 style={{ display: 'none' }}
                 onChange={(e) => {
@@ -153,7 +154,7 @@ export default function Home() {
                     'e.target.files?.item(0) :>> ',
                     e.target.files?.item(0)
                   );
-                  ffmpegProcess.removeAllfiles(ffmpeg);
+                  ffmpegProcess.removeAllFiles(ffmpeg);
                 }}
               />
               <button className={styles.button} onClick={onBrowseBtnClick}>
