@@ -109,7 +109,6 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Succinct Cut</h1>
         {user === null && <h3>Please log in</h3>}
         {ready && user !== null ? (
           <>
