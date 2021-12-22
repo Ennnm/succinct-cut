@@ -4,7 +4,6 @@ import styles from '../styles/Home.module.css';
 import { useEffect, useState, useRef, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import { cleanClip } from '../lib/clip-handlers/cleanClip';
 import { extractAudioClip } from '../lib/clip-handlers/extractAudioClip';
 import { optimiseAudioClip } from '../lib/clip-handlers/optimiseAudioClip';
@@ -14,27 +13,15 @@ import { Loader } from '../components/Loader';
 import { ffmpegContext, UserContext } from '../lib/context';
 
 // ============FIREBASE=============
-import {
-  getFirestore,
-  connectFirestoreEmulator,
-  doc,
-  deleteDoc,
-  onSnapshot,
-  query,
-  where,
-  getDocs,
-  collection,
-} from 'firebase/firestore';
+import { doc, deleteDoc, onSnapshot } from 'firebase/firestore';
 //import needed to get firebase initiated
 import { firestore, auth } from '../lib/firebase';
 
 // ============FIREBASE=============
-const ffmpeg = createFFmpeg({
-  corePath: '/ffmpeg-core/ffmpeg-core.js',
-});
+
 export default function Home() {
   // const { user, username } = useContext(UserContext);
-  // const ffmpeg = useContext(ffmpegContext);
+  const ffmpeg = useContext(ffmpegContext);
 
   const [ready, setReady] = useState(false);
   const [video, setVideo] = useState();
@@ -45,12 +32,12 @@ export default function Home() {
   const ffmpegRatio = useRef(0);
   const [processStage, setProcessStage] = useState([]);
   const [timeTaken, setTimeTaken] = useState([]);
-  const [processRatio, setProcessRatio] = useState(1);
   let user = auth.currentUser;
 
-  const AUDIOFILENAME = 'test.aac';
   const FINALAUDIO = 'finalAudio.aac';
   const PROCESSEDAUDIOFN = 'finalcut.mp4';
+
+  const inputFile = useRef(null);
 
   const timeStampAtStage = (stage) => {
     const currTime = Math.round(+new Date());
@@ -108,6 +95,11 @@ export default function Home() {
       console.log('no user logged in, please log in');
     }
   }, [audio]);
+
+  const onBrowseBtnClick = () => {
+    inputFile.current.click();
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -120,77 +112,77 @@ export default function Home() {
         <h1 className={styles.title}>Succinct Cut</h1>
         {user === null && <h3>Please log in</h3>}
         {ready && user !== null ? (
-          <div className="App">
-            {video && (
-              <video
-                controls
-                width="250"
-                src={URL.createObjectURL(video)}
-              ></video>
-            )}
-            <input
-              type="file"
-              onChange={(e) => {
-                setVideo(e.target.files?.item(0));
-                //create new uuid for audio filename to be saved
-                setAudioUuid(uuidv4());
-                console.log(
-                  'e.target.files?.item(0) :>> ',
-                  e.target.files?.item(0)
-                );
-              }}
-            />
+          <>
             {processStage.length > 0 && (
               <>
                 <h3>{processStage.at(-1)}</h3>
                 <h3>Time taken: {timeTaken.at(-1) - timeTaken.at(0)} ms</h3>
-                {/* <h3>TimeStamps: {timeTaken.join(' ms, ')} ms </h3> */}
-                {/* {processRatio !== 1 && (
-                  <h3>progress {(processRatio * 100).toFixed(0)} %</h3>
-                )} */}
-
                 {ffmpegRatio.current !== 1 && (
                   <h3>ffmpeg progress {ffmpegRatio.current}</h3>
                 )}
               </>
             )}
-            {video && (
-              <>
-                <button
-                  onClick={() => {
-                    extractAudioClip(
-                      ffmpeg,
-                      video,
-                      FINALAUDIO,
-                      setAudio,
-                      audioUuid,
-                      setProcessStage,
-                      setProcessRatio,
-                      timeStampAtStage
-                    );
-                    setProcessStage([]);
-                    setTimeTaken([]);
-                  }}
-                >
-                  Extract audio
-                </button>
-                <button
-                  onClick={() => {
-                    optimiseAudioClip(
-                      ffmpeg,
-                      video,
-                      AUDIOFILENAME,
-                      FINALAUDIO,
-                      setAudio
-                    );
-                  }}
-                >
-                  Optimise audio
-                </button>
-              </>
-            )}
-            {audio && (
+            <div className={styles.grid}>
+              <div className={styles.card}>
+                {video && (
+                  <video
+                    className={styles.video}
+                    controls
+                    src={URL.createObjectURL(video)}
+                  ></video>
+                )}
+              </div>
+              <div className={styles.card}>
+                {cleanedClip && (
+                  <video
+                    controls
+                    className={styles.video}
+                    src={cleanedClip}
+                  ></video>
+                )}
+              </div>
+            </div>
+            <div className={styles.grid}>
+              <input
+                type="file"
+                ref={inputFile}
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  setVideo(e.target.files?.item(0));
+                  //create new uuid for audio filename to be saved
+                  setAudioUuid(uuidv4());
+                  console.log(
+                    'e.target.files?.item(0) :>> ',
+                    e.target.files?.item(0)
+                  );
+                }}
+              />
+              <button className={styles.button} onClick={onBrowseBtnClick}>
+                Browse ...
+              </button>
+
               <button
+                className={styles.button}
+                onClick={() => {
+                  extractAudioClip(
+                    ffmpeg,
+                    video,
+                    FINALAUDIO,
+                    setAudio,
+                    audioUuid,
+                    setProcessStage,
+                    timeStampAtStage
+                  );
+                  setProcessStage([]);
+                  setTimeTaken([]);
+                }}
+                disabled={video}
+              >
+                Analyse Video
+              </button>
+
+              <button
+                className={styles.button}
                 onClick={() => {
                   cleanClip(
                     transcription,
@@ -201,35 +193,33 @@ export default function Home() {
                     timeStampAtStage
                   );
                 }}
+                disabled={transcription}
               >
-                Clean clip
+                Clean Video
               </button>
-            )}
-            {audio && <video controls width="250" src={audio}></video>}
+              <button
+                className={styles.button}
+                onClick={() => {
+                  cleanClip(
+                    transcription,
+                    ffmpeg,
+                    video,
+                    PROCESSEDAUDIOFN,
+                    setCleanedClip,
+                    timeStampAtStage
+                  );
+                }}
+                disabled={cleanedClip}
+              >
+                Download
+              </button>
+            </div>
             {transcription && <p>{JSON.stringify(transcription)}</p>}
-            {cleanedClip && (
-              <video controls width="250" src={cleanedClip}></video>
-            )}
-          </div>
+          </>
         ) : (
           <Loader show={true} />
-          // <p>Loading...</p>
         )}
-        <div className={styles.grid}></div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by En & Sn
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
   );
 }
