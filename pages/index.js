@@ -10,8 +10,11 @@ import * as ffmpegProcess from '../lib/videoprocessing/ffmpegProcess';
 
 import { Loader } from '../components/Loader';
 import { ffmpegContext, UserContext } from '../lib/context';
-// import { transcript } from '../lib/videoprocessing/transcript_en.js';
-import { transcript } from '../lib/videoprocessing/transcript_2_flac_narrowband';
+// import { transcript } from '../refTranscriptData/transcript_en.js';
+// import { transcript } from '../refTranscriptData/transcript_2_flac_narrowband';
+// import { transcript } from '../refTranscriptData/cxTranscripts5min';
+// import { transcript } from '../refTranscriptData/cxTranscripts2min';
+import { transcript } from '../refTranscriptData/cxTranscripts1min';
 // ============FIREBASE=============
 import { doc, deleteDoc, onSnapshot } from 'firebase/firestore';
 //import needed to get firebase initiated
@@ -28,7 +31,8 @@ export default function Home() {
   const [audioUuid, setAudioUuid] = useState();
   const [cleanedClip, setCleanedClip] = useState();
   //TODO remove trasncript
-  const [transcription, setTranscription] = useState(transcript);
+  // const [transcription, setTranscription] = useState();
+  const [transcription, setTranscription] = useState(transcript.result);
   const ffmpegRatio = useRef(0);
   const [processStage, setProcessStage] = useState([]);
   const [timeTaken, setTimeTaken] = useState([]);
@@ -47,8 +51,10 @@ export default function Home() {
   const timeStampAtStage = (stage) => {
     const currTime = Math.round(+new Date());
     // can be combined
-    setTimeTaken([...timeTaken, currTime]);
-    setProcessStage([...processStage, stage]);
+    timeTaken.push(currTime);
+    processStage.push(stage);
+    setTimeTaken(timeTaken);
+    setProcessStage(processStage);
   };
 
   const load = async () => {
@@ -117,6 +123,13 @@ export default function Home() {
     const re = /(?:\.([^.]+))?$/;
     const fileExt = re.exec(file.name)[1];
     return fileExt;
+  };
+  const calcTimeTakenPerStage = () => {
+    const durations = [];
+    for (let i = 1; i < timeTaken.length; i += 1) {
+      durations.push(timeTaken[i] - timeTaken[i - 1]);
+    }
+    return durations;
   };
 
   return (
@@ -236,6 +249,11 @@ export default function Home() {
               <>
                 <h3>{processStage.at(-1)}:</h3>
                 <h3>Time taken: {timeTaken.at(-1) - timeTaken.at(0)} ms</h3>
+                {processStage.map((stage, i) => (
+                  <span>
+                    {stage}: {calcTimeTakenPerStage()[i]}
+                  </span>
+                ))}
               </>
             )}
             {transcription && <p>{JSON.stringify(transcription)}</p>}
