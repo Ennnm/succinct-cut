@@ -33,6 +33,9 @@ export default function Home() {
   const [processStage, setProcessStage] = useState([]);
   const [timeTaken, setTimeTaken] = useState([]);
   const [audioAnalysisBegan, setAudioAnalysisBegan] = useState(false);
+  const [message, setMessage] = useState();
+  //set message for video validation
+
   let user = auth.currentUser;
 
   const FINALAUDIO = 'finalAudio.aac';
@@ -106,6 +109,16 @@ export default function Home() {
     downloadAnchor.current.click();
   };
 
+  const fileSizeInMb = (file) => {
+    const fileSize = (file.size / (1024 * 1024)).toFixed(4);
+    return fileSize;
+  };
+  const getFileExtension = (file) => {
+    const re = /(?:\.([^.]+))?$/;
+    const fileExt = re.exec(file.name)[1];
+    return fileExt;
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -117,8 +130,8 @@ export default function Home() {
       <main className={styles.main}>
         {user === null && <h3>Please log in</h3>}
         {/* to revert back after fixing google signin issue */}
-        {ready ? (
-          // {ready && user !== null ? (
+        {/* {ready ? ( */}
+        {ready && user !== null ? (
           <>
             <div className={styles.grid}>
               <div className={styles.card}>
@@ -129,6 +142,7 @@ export default function Home() {
                     src={URL.createObjectURL(video)}
                   ></video>
                 )}
+                {message && <div>{message}</div>}
               </div>
               <div className={styles.card}>
                 {cleanedClip && (
@@ -143,17 +157,23 @@ export default function Home() {
             <div className={styles.grid}>
               <input
                 type="file"
-                accept='.mp4'
+                accept=".mp4"
                 ref={inputFile}
                 style={{ display: 'none' }}
                 onChange={(e) => {
-                  setVideo(e.target.files?.item(0));
+                  const fileUpload = e.target.files?.item(0);
+                  if (
+                    fileUpload &&
+                    fileSizeInMb(fileUpload) < 100 &&
+                    getFileExtension(fileUpload) === 'mp4'
+                  ) {
+                    setVideo(fileUpload);
+                    setMessage();
+                  } else {
+                    setMessage('Choose a mp4 file that is <100 MB');
+                  }
                   //create new uuid for audio filename to be saved
-                  // setAudioUuid(uuidv4());
-                  console.log(
-                    'e.target.files?.item(0) :>> ',
-                    e.target.files?.item(0)
-                  );
+                  console.log('fileUpload', fileUpload);
                   ffmpegProcess.removeAllFiles(ffmpeg);
                 }}
               />
