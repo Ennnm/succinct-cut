@@ -22,6 +22,9 @@ import { firestore, auth } from '../lib/firebase';
 
 // ============FIREBASE=============
 
+
+import { Progress, ProgressLabel, Button, Flex, HStack, Tooltip } from '@chakra-ui/react'
+
 export default function Home() {
   // const { user, username } = useContext(UserContext);
   const ffmpeg = useContext(ffmpegContext);
@@ -31,15 +34,28 @@ export default function Home() {
   const [audioUuid, setAudioUuid] = useState();
   const [cleanedClip, setCleanedClip] = useState();
   //TODO remove trasncript
-  // const [transcription, setTranscription] = useState();
-  const [transcription, setTranscription] = useState(transcript.result);
+  const [ transcription, setTranscription] = useState(transcript);
   const ffmpegRatio = useRef(0);
-  const [processStage, setProcessStage] = useState([]);
-  const [timeTaken, setTimeTaken] = useState([]);
-  const [audioAnalysisBegan, setAudioAnalysisBegan] = useState(false);
-  const [message, setMessage] = useState();
-  //set message for video validation
-
+  const [ processStage, setProcessStage] = useState([]);
+  const [ progress, setProgress ] = useState(0)
+  const [ timeTaken, setTimeTaken] = useState([]);
+  const [ audioAnalysisBegan, setAudioAnalysisBegan] = useState(false);
+  const NORMS = {
+    "Loading video"       : 5,
+    "Extracting audio"    : 5, 
+    "Extracted audio"     : 5, 
+    "Uploading audio"     : 5,
+    "Analysing audio"     : 5, 
+    "Analysed audio"      : 25, 
+    "Processing video"    : 5, 
+    "Cleaning transcript" : 5,
+    "Cutting video"       : 5, 
+    "Speeding up pauses"  : 16,
+    "Preparing to stitch" : 4,
+    "Stitching video"     : 5,
+    "Clearing memory"     : 9,
+    "Completed"           : 1
+  }
   let user = auth.currentUser;
 
   const FINALAUDIO = 'finalAudio.aac';
@@ -55,6 +71,7 @@ export default function Home() {
     processStage.push(stage);
     setTimeTaken(timeTaken);
     setProcessStage(processStage);
+    setProgress(progress + +NORMS[stage])
   };
 
   const load = async () => {
@@ -131,6 +148,136 @@ export default function Home() {
     }
     return durations;
   };
+  const [ transcriptList, setTranscriptList] = useState()
+  const [ optimizedList, setOptimizedList ] = useState()
+  const [ remainingPercentage, setRemainingPercentage] = useState(100)
+
+  useEffect(()=> {
+    const transcriptDuration = transcription[transcription.length - 1].endTime
+      const colorMap = {
+        "WORD": 'green',
+        "%PAUSE": 'yellow',
+        "%HESITATION": "orange",
+        "BREAK": 'gray'
+      }
+    
+    let memoPrevEnd = 0
+
+
+    const tList = transcription.map( t => {
+      let percentage, tType, duration, intermediate
+      if(memoPrevEnd - t.startTime != 0) {
+        // implies there's a break
+        duration = t.startTime - memoPrevEnd
+        percentage = duration / transcriptDuration * 100
+        tType = "[ BREAK ]"
+
+        intermediate = (
+          <Tooltip hasArrow label={`${tType}`}>
+            <Flex height="20px" width={`${percentage}%`} bgColor={ colorMap["BREAK"]}> </Flex>
+          </Tooltip>
+        )
+
+        memoPrevEnd = t.endTime
+      } 
+
+        duration = t.endTime - t.startTime
+        percentage = duration / transcriptDuration * 100
+
+        switch(t.type){
+          case "%HESITATION":
+            tType = "[ HESITATION ]"
+            break
+          case "%PAUSE":
+            tType = "[ PAUSE ]"
+            break
+          case "WORD":
+            tType = t.value
+            break
+          default:
+            tType = `[ ${t.type.substring(1,)} ]`
+            break
+        }
+      
+
+        return (
+          <>
+            { intermediate }
+            <Tooltip hasArrow label={tType}>
+              <Flex height="20px" width={`${percentage}%`} bgColor={colorMap[t.type]}> </Flex>
+            </Tooltip>
+          </>
+        )
+      })
+
+    setTranscriptList(tList)
+    
+    let memoPrevEnd2 = 0
+
+    const oList = transcription.map( t => {
+      let percentage, tType, duration, intermediate
+      if(memoPrevEnd2 - t.startTime != 0) {
+        // implies there's a break
+        duration = t.startTime - memoPrevEnd2
+        if(duration > 0.8){
+          duration = 0.8
+        }
+        percentage = duration / transcriptDuration * 100
+        setRemainingPercentage(remainingPercentage - percentage)
+        
+        tType = "[ BREAK ]"
+
+        intermediate = (
+          <Tooltip hasArrow label={`${tType}`}>
+            <Flex height="20px" width={`${percentage}%`} bgColor={colorMap["BREAK"]}> </Flex>
+          </Tooltip>
+        )
+
+        memoPrevEnd2 = t.endTime
+      } 
+
+      switch(t.type){
+        case "%HESITATION":
+          return (
+            <>
+              { intermediate }
+            </>
+          )
+        case "%PAUSE":
+          tType = "[ PAUSE ]"
+          duration = t.endTime - t.startTime
+          if(duration > 0.8){
+            duration = 0.8
+          }
+          percentage = duration / transcriptDuration * 100
+          break
+        case "WORD":
+          tType = t.value
+          duration = t.endTime - t.startTime
+          percentage = duration / transcriptDuration * 100
+          break
+        default:
+          tType = `[ ${t.type.substring(1,)} ]`
+          break
+      }
+
+      setRemainingPercentage(remainingPercentage - percentage)
+      memoPrevEnd2 = t.endTime
+
+
+      return (
+        <>
+          { intermediate }
+          <Tooltip hasArrow label={tType}>
+            <Flex height="20px" width={`${percentage}%`} bgColor={colorMap[t.type]}> </Flex>
+          </Tooltip>
+        </>
+      )
+    })
+
+    setOptimizedList(oList)
+  }, [ transcription ])
+
 
   return (
     <div className={styles.container}>
@@ -165,6 +312,29 @@ export default function Home() {
                     src={cleanedClip}
                   ></video>
                 )}
+              </div>
+            </div>
+            <div className={styles.grid}>
+              <div className={styles.minicard}>
+                <HStack
+                  width="100%"
+                  border="1px solid"
+                  spacing={0}
+                >
+                  { transcriptList }
+                </HStack>
+              </div>
+              <div className={styles.minicard}>
+                <HStack
+                  width="100vw"
+                  border="1px solid"
+                  spacing={0}
+                >
+                  { optimizedList }
+                  <Tooltip hasArrow label={`Time Savings = ${Math.round(remainingPercentage)}% | ${ Math.round(remainingPercentage / 100 * transcriptDuration)}s` } >
+                    <Flex width={`${remainingPercentage}%`} height="20px" bgColor="white"> </Flex>
+                  </Tooltip>
+                </HStack>
               </div>
             </div>
             <div className={styles.grid}>
@@ -245,17 +415,19 @@ export default function Home() {
                 Click to download
               </a>
             </div>
-            {processStage.length > 0 && (
-              <>
-                <h3>{processStage.at(-1)}:</h3>
-                <h3>Time taken: {timeTaken.at(-1) - timeTaken.at(0)} ms</h3>
-                {processStage.map((stage, i) => (
-                  <span>
-                    {stage}: {calcTimeTakenPerStage()[i]}
-                  </span>
-                ))}
-              </>
-            )}
+            <Flex>
+              <Progress h={4} w="90vw" hasStripe isAnimated value={ progress }>
+                <ProgressLabel color="black"> { 
+                  ( processStage.length > 0 && timeTaken.length > 0) && ( 
+                    `${processStage.at(-1)} | Time taken: ${timeTaken.at(-1) - timeTaken.at(0)} ms`) && (
+                      { processStage.map((stage, i) => (
+                          <span>
+                            {stage}: {calcTimeTakenPerStage()[i]}
+                          </span>
+                        ))})
+                   } </ProgressLabel>
+              </Progress>
+            </Flex>
             {transcription && <p>{JSON.stringify(transcription)}</p>}
           </>
         ) : (
