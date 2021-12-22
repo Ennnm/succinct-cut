@@ -1,17 +1,17 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import { useEffect, useState, useRef, useContext } from 'react';
+import { Link } from '@chakra-ui/react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { cleanClip } from '../lib/clip-handlers/cleanClip';
 import { extractAudioClip } from '../lib/clip-handlers/extractAudioClip';
-import { optimiseAudioClip } from '../lib/clip-handlers/optimiseAudioClip';
 import * as stage from '../lib/clip-handlers/stage-constants';
 
 import { Loader } from '../components/Loader';
 import { ffmpegContext, UserContext } from '../lib/context';
-
+import { transcript } from '../lib/videoprocessing/transcript_en.js';
+// import { transcript } from '../lib/videoprocessing/transcript_2_flac_narrowband';
 // ============FIREBASE=============
 import { doc, deleteDoc, onSnapshot } from 'firebase/firestore';
 //import needed to get firebase initiated
@@ -28,7 +28,8 @@ export default function Home() {
   const [audioUuid, setAudioUuid] = useState();
   const [audio, setAudio] = useState();
   const [cleanedClip, setCleanedClip] = useState();
-  const [transcription, setTranscription] = useState();
+  //TODO remove trasncript
+  const [transcription, setTranscription] = useState(transcript.result);
   const ffmpegRatio = useRef(0);
   const [processStage, setProcessStage] = useState([]);
   const [timeTaken, setTimeTaken] = useState([]);
@@ -38,6 +39,7 @@ export default function Home() {
   const PROCESSEDAUDIOFN = 'finalcut.mp4';
 
   const inputFile = useRef(null);
+  const downloadAnchor = useRef(null);
 
   const timeStampAtStage = (stage) => {
     const currTime = Math.round(+new Date());
@@ -100,6 +102,10 @@ export default function Home() {
     inputFile.current.click();
   };
 
+  const onDownloadClick = () => {
+    downloadAnchor.current.click();
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -110,17 +116,10 @@ export default function Home() {
 
       <main className={styles.main}>
         {user === null && <h3>Please log in</h3>}
-        {ready && user !== null ? (
+        {/* to revert back after fixing google signin issue */}
+        {ready ? (
+          // {ready && user !== null ? (
           <>
-            {processStage.length > 0 && (
-              <>
-                <h3>{processStage.at(-1)}</h3>
-                <h3>Time taken: {timeTaken.at(-1) - timeTaken.at(0)} ms</h3>
-                {ffmpegRatio.current !== 1 && (
-                  <h3>ffmpeg progress {ffmpegRatio.current}</h3>
-                )}
-              </>
-            )}
             <div className={styles.grid}>
               <div className={styles.card}>
                 {video && (
@@ -175,7 +174,7 @@ export default function Home() {
                   setProcessStage([]);
                   setTimeTaken([]);
                 }}
-                disabled={video}
+                disabled={!video}
               >
                 Analyse Video
               </button>
@@ -192,27 +191,32 @@ export default function Home() {
                     timeStampAtStage
                   );
                 }}
-                disabled={transcription}
+                disabled={!transcription}
               >
                 Clean Video
               </button>
               <button
                 className={styles.button}
-                onClick={() => {
-                  cleanClip(
-                    transcription,
-                    ffmpeg,
-                    video,
-                    PROCESSEDAUDIOFN,
-                    setCleanedClip,
-                    timeStampAtStage
-                  );
-                }}
-                disabled={cleanedClip}
+                onClick={onDownloadClick}
+                disabled={!cleanedClip}
               >
                 Download
               </button>
+              <a
+                ref={downloadAnchor}
+                href={cleanedClip}
+                download={'result.mp4'}
+                style={{display:'none'}}
+              >
+                Click to download
+              </a>
             </div>
+            {processStage.length > 0 && (
+              <>
+                <h3>{processStage.at(-1)}:</h3>
+                <h3>Time taken: {timeTaken.at(-1) - timeTaken.at(0)} ms</h3>
+              </>
+            )}
             {transcription && <p>{JSON.stringify(transcription)}</p>}
           </>
         ) : (

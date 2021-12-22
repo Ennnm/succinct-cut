@@ -6,21 +6,23 @@ import { UserContext } from '../lib/context';
 // Sign in with Google button
 export function SignInButton() {
   const signInWithGoogle = async () => {
-    await signInWithPopup(auth, googleAuthProvider);
+    await signInWithPopup(auth, googleAuthProvider).catch((e) => {
+      console.log('error with signing in with google', e);
+    });
   };
 
   return (
-    <>
-      <button className="btn-google" onClick={signInWithGoogle}>
-        <img src={'/google.png'} width="30px" /> Sign in with Google
-      </button>
-      <button onClick={() => signInAnonymously(auth)}>
-        Sign in Anonymously
-      </button>
-    </>
+    <button className="btn-google" onClick={signInWithGoogle}>
+      <img src={'/google.png'} /> Sign in with Google
+    </button>
   );
 }
 // Sign out button
 export function SignOutButton() {
-  return <button onClick={() => signOut(auth)}>Sign Out</button>;
+  return (
+    <button className="btn-google" onClick={signOut(auth)}>
+      <img src={'/google.png'} /> Sign out of Google
+    </button>
+  );
+  // <button onClick={() => signOut(auth)}>Sign Out</button>;
 }

@@ -159,6 +159,7 @@ button.btn-google {
 }
 
 .btn-google img {
+  height: 30px;
   width: 30px;
   margin-right: 10px;
 }

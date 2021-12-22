@@ -14,7 +14,9 @@ export default function Navbar() {
             <button className="btn-logo">Succinct Cut</button>
           </Link>
         </li>
-        {user ? <SignOutButton /> : <SignInButton />}
+        <li>
+          {user ? <SignOutButton /> : <SignInButton />}
+        </li>
       </ul>
     </nav>
   );
