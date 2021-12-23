@@ -14,9 +14,7 @@ import { ffmpegContext, UserContext } from '../lib/context';
 // import { transcript } from '../refTranscriptData/transcript_2_flac_narrowband';
 // import { transcript } from '../refTranscriptData/cxTranscripts5min';
 // import { transcript } from '../refTranscriptData/cxTranscripts2min';
-import {
-  transcript,
-} from '../refTranscriptData/cxTranscripts1min';
+import { transcript } from '../refTranscriptData/cxTranscripts1min';
 // ============FIREBASE=============
 import { doc, deleteDoc, onSnapshot } from 'firebase/firestore';
 //import needed to get firebase initiated
@@ -123,8 +121,14 @@ export default function Home() {
         (doc) => {
           if (doc.data() !== undefined && 'response' in doc.data()) {
             console.log('currentdata:', JSON.parse(doc.data().response));
-            setTranscription(JSON.parse(doc.data().response).result);
+            const { result } = JSON.parse(doc.data().response);
+            setTranscription(result);
             timeStampAtStage(stage.ANALYSED_AUDIO);
+            const { results } = result;
+            const lastResultTimeStamps = results[results.length - 1].timeStamps;
+            const lastTime =
+              lastResultTimeStamps[lastResultTimeStamps.length - 1][2];
+            setTranscriptDuration(lastTime);
           }
         }
       );
@@ -169,10 +173,9 @@ export default function Home() {
   useEffect(() => {
     console.log('mergedTranscript', mergedTranscript);
     if (!!mergedTranscript) {
-      // const transcriptDuration = mergedTranscript[mergedTranscript.length - 1].endTime;
-      setTranscriptDuration(
-        mergedTranscript[mergedTranscript.length - 1].endTime
-      );
+      const transcriptDura =
+        mergedTranscript[mergedTranscript.length - 1].endTime;
+      setTranscriptDuration(transcriptDura);
       const colorMap = {
         WORD: 'green',
         '%PAUSE': 'yellow',
@@ -187,7 +190,7 @@ export default function Home() {
         if (memoPrevEnd - t.startTime != 0) {
           // implies there's a break
           duration = t.startTime - memoPrevEnd;
-          percentage = (duration / transcriptDuration) * 100;
+          percentage = (duration / transcriptDura) * 100;
           tType = '[ BREAK ]';
 
           intermediate = (
@@ -206,7 +209,7 @@ export default function Home() {
         }
 
         duration = t.endTime - t.startTime;
-        percentage = (duration / transcriptDuration) * 100;
+        percentage = (duration / transcriptDura) * 100;
 
         switch (t.type) {
           case '%HESITATION':
@@ -251,7 +254,7 @@ export default function Home() {
           if (duration > 0.8) {
             duration = 0.8;
           }
-          percentage = (duration / transcriptDuration) * 100;
+          percentage = (duration / transcriptDura) * 100;
           setRemainingPercentage(remainingPercentage - percentage);
 
           tType = '[ BREAK ]';
@@ -444,7 +447,8 @@ export default function Home() {
                     setCleanedClip,
                     timeStampAtStage,
                     setMergedTranscript,
-                    setCleanedTranscript
+                    setCleanedTranscript,
+                    setTranscriptDuration
                   );
                 }}
                 disabled={!transcription || !video}
