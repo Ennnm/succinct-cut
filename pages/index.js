@@ -481,7 +481,7 @@ export default function Home() {
                       timeTaken.at(-1) - timeTaken.at(0)
                     } ms` &&
                     processStage.map((stage, i) => (
-                      <span>
+                      <span key={i}>
                         {stage}: {calcTimeTakenPerStage()[i]}
                       </span>
                     ))}{' '}
