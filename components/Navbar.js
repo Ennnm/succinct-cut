@@ -14,13 +14,13 @@ export default function Navbar() {
             <button className="btn-logo">Succinct Cut</button>
           </Link>
         </li>
-        <li>
+        {/* <li>
           {user === null && (
             <Link href="/enter">
               <button className="btn-blue">Log in</button>
             </Link>
           )}
-        </li>
+        </li> */}
       </ul>
     </nav>
   );
