@@ -15,10 +15,11 @@ export default function Navbar() {
           </Link>
         </li>
         <li>
-          <Link href="/enter">
-            <button className="btn-blue">Log in</button>
-          </Link>
-          {/* {user ? <SignOutButton /> : <SignInButton />} */}
+          {user === null && (
+            <Link href="/enter">
+              <button className="btn-blue">Log in</button>
+            </Link>
+          )}
         </li>
       </ul>
     </nav>
