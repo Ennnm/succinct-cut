@@ -12,9 +12,9 @@ import { Loader } from '../components/Loader';
 import { ffmpegContext, UserContext } from '../lib/context';
 // import { transcript } from '../refTranscriptData/transcript_en.js';
 // import { transcript } from '../refTranscriptData/transcript_2_flac_narrowband';
-// import { transcript } from '../refTranscriptData/cxTranscripts5min';
+import { transcript } from '../refTranscriptData/cxTranscripts5min';
 // import { transcript } from '../refTranscriptData/cxTranscripts2min';
-import { transcript } from '../refTranscriptData/cxTranscripts1min';
+// import { transcript } from '../refTranscriptData/cxTranscripts1min';
 // ============FIREBASE=============
 import { doc, deleteDoc, onSnapshot } from 'firebase/firestore';
 //import needed to get firebase initiated
@@ -95,11 +95,11 @@ export default function Home() {
       console.log('ffmpeg was not loaded');
       try {
         await ffmpeg.load().then(() => setReady(true));
-        await ffmpeg.setProgress((p) => {
-          console.log('ratio', p);
-          // setProgressRatio(p.ratio);
-          ffmpegRatio.current = p.ratio;
-        });
+        // await ffmpeg.setProgress((p) => {
+        //   console.log('ratio', p);
+        //   // setProgressRatio(p.ratio);
+        //   ffmpegRatio.current = p.ratio;
+        // });
       } catch (e) {
         console.log('error loading ffmpeg', e);
         location.reload();
