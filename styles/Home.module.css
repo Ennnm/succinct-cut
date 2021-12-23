@@ -76,6 +76,7 @@
   background-size: cover;
   overflow: hidden;
 }
+
 .grid {
   display: flex;
   align-items: center;

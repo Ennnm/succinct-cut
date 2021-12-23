@@ -29,7 +29,9 @@ import {
   Flex,
   HStack,
   Tooltip,
-  Spinner
+  Spinner,
+  useToast,
+  Container
 } from '@chakra-ui/react';
 
 export default function Home() {
@@ -52,22 +54,23 @@ export default function Home() {
   const [cleanedTranscript, setCleanedTranscript] = useState();
   const [message, setMessage] = useState();
 
-  const NORMS = {
-    'Loading video': 5,
-    'Extracting audio': 5,
-    'Extracted audio': 5,
-    'Uploading audio': 5,
-    'Analysing audio': 5,
-    'Analysed audio': 25,
-    'Processing video': 5,
-    'Cleaning transcript': 5,
-    'Cutting video': 5,
-    'Speeding up pauses': 16,
-    'Preparing to stitch': 4,
-    'Stitching video': 5,
-    'Clearing memory': 9,
-    Completed: 1,
-  };
+  const NORMS = {};
+
+  NORMS[stage.LOADING_VIDEO] = 5
+  NORMS[stage.EXTRACTING_AUDIO] = 5
+  NORMS[stage.EXTRACTED_AUDIO] = 5
+  NORMS[stage.UPLOADING_AUDIO] =5
+  NORMS[stage.ANALYSING_AUDIO] = 5
+  NORMS[stage.ANALYSED_AUDIO] = 25
+  NORMS[stage.PROCESSING_VIDEO] = 5
+  NORMS[stage.CLEANING_TRANSCRIPT] = 5
+  NORMS[stage.CUTTING_VIDEO] = 5
+  NORMS[stage.SPEEDING_UP_PAUSES] = 16
+  NORMS[stage.PREPARING_TO_STITCH] = 4
+  NORMS[stage.STITCHING_VIDEO] = 5
+  NORMS[stage.CLEARING_MEMORY] =9
+  NORMS[stage.COMPLETED] = 1
+
   let user = auth.currentUser;
 
   const FINALAUDIO = 'finalAudio.aac';
@@ -83,7 +86,8 @@ export default function Home() {
     processStage.push(stage);
     setTimeTaken(timeTaken);
     setProcessStage(processStage);
-    setProgress(progress + +NORMS[stage]);
+
+    setProgress(progress => progress + +NORMS[stage]);
   };
 
   const load = async () => {
@@ -173,9 +177,9 @@ export default function Home() {
   useEffect(() => {
     console.log('mergedTranscript', mergedTranscript);
     if (!!mergedTranscript) {
-      const transcriptDura =
+      const tduration =
         mergedTranscript[mergedTranscript.length - 1].endTime;
-      setTranscriptDuration(transcriptDura);
+      setTranscriptDuration(tduration);
       const colorMap = {
         WORD: 'green',
         '%PAUSE': 'yellow',
@@ -190,7 +194,7 @@ export default function Home() {
         if (memoPrevEnd - t.startTime != 0) {
           // implies there's a break
           duration = t.startTime - memoPrevEnd;
-          percentage = (duration / transcriptDura) * 100;
+          percentage = (duration / tduration) * 100;
           tType = '[ BREAK ]';
 
           intermediate = (
@@ -209,7 +213,7 @@ export default function Home() {
         }
 
         duration = t.endTime - t.startTime;
-        percentage = (duration / transcriptDura) * 100;
+        percentage = (duration / tduration) * 100;
 
         switch (t.type) {
           case '%HESITATION':
@@ -254,8 +258,8 @@ export default function Home() {
           if (duration > 0.8) {
             duration = 0.8;
           }
-          percentage = (duration / transcriptDura) * 100;
-          setRemainingPercentage(remainingPercentage - percentage);
+          percentage = (duration / tduration) * 100;
+          setRemainingPercentage(remainingPercentage => remainingPercentage - percentage);
 
           tType = '[ BREAK ]';
 
@@ -283,19 +287,19 @@ export default function Home() {
             if (duration > 0.8) {
               duration = 0.8;
             }
-            percentage = (duration / transcriptDuration) * 100;
+            percentage = (duration / tduration) * 100;
             break;
           case 'WORD':
             tType = t.value;
             duration = t.endTime - t.startTime;
-            percentage = (duration / transcriptDuration) * 100;
+            percentage = (duration / tduration) * 100;
             break;
           default:
             tType = `[ ${t.type.substring(1)} ]`;
             break;
         }
 
-        setRemainingPercentage(remainingPercentage - percentage);
+        setRemainingPercentage(remainingPercentage => remainingPercentage - percentage);
         memoPrevEnd2 = t.endTime;
 
         return (
@@ -345,7 +349,7 @@ export default function Home() {
               </div>
               <div className={styles.card}>
                 { video && (
-                  cleanedClip ?
+                  (processStage.length > 1 && cleanedClip) ?
                     <video
                       controls
                       className={styles.video}
@@ -364,29 +368,33 @@ export default function Home() {
             </div>
             <div className={styles.grid}>
               <div className={styles.minicard}>
-                <HStack width="100%" border="1px solid" spacing={0}>
+                <HStack width="100%" border="0.5px solid" spacing={0}>
                   {transcriptList}
                 </HStack>
               </div>
               <div className={styles.minicard}>
-                <HStack width="100vw" border="1px solid" spacing={0}>
-                  { optimizedList }
-                  <Tooltip
-                    hasArrow
-                    label={`Time Savings = ${Math.round(
-                      remainingPercentage
-                    )}% | ${Math.round(
-                      (remainingPercentage / 100) * transcriptDuration
-                    )}s`}
-                  >
-                    <Flex
-                      width={`${remainingPercentage}%`}
-                      height="20px"
-                      bgColor="white"
-                    >
-                      {' '}
-                    </Flex>
-                  </Tooltip>
+                <HStack width="100vw" border="0.5px solid" spacing={0}>
+                  { optimizedList ? ( 
+                    <>
+                      {optimizedList}   
+                      <Tooltip
+                          hasArrow
+                          label={`Potential Time Savings = ${Math.abs(Math.round(
+                            remainingPercentage
+                          ))}% | ${Math.abs(Math.round(
+                            (remainingPercentage / 100) * transcriptDuration
+                          ))}s`}
+                        >
+                          <Flex
+                            width={`${Math.abs(remainingPercentage)}%`}
+                            height="20px"
+                            bgColor="white"
+                          >
+                            {' '}
+                          </Flex>
+                        </Tooltip>
+                    </>
+                    ) : null }
                 </HStack>
               </div>
             </div>
@@ -413,12 +421,12 @@ export default function Home() {
                   ffmpegProcess.removeAllFiles(ffmpeg);
                 }}
               />
-              <button className={styles.button} onClick={onBrowseBtnClick}>
+              <Button variant="ghost" onClick={onBrowseBtnClick}>
                 Browse ...
-              </button>
+              </Button>
 
-              <button
-                className={styles.button}
+              <Button variant="ghost"
+              
                 onClick={() => {
                   extractAudioClip(
                     ffmpeg,
@@ -427,17 +435,17 @@ export default function Home() {
                     setAudioUuid,
                     timeStampAtStage
                   );
-                  setProcessStage([]);
+                  // setProcessStage([]);
                   setTimeTaken([]);
                   setAudioAnalysisBegan(true);
                 }}
-                disabled={!video}
+                isDisabled={!video || processStage.length > 0 }
               >
                 Analyse Video
-              </button>
+              </Button>
 
-              <button
-                className={styles.button}
+              <Button variant="ghost"
+              
                 onClick={() => {
                   cleanClip(
                     transcription,
@@ -451,42 +459,47 @@ export default function Home() {
                     setTranscriptDuration
                   );
                 }}
-                disabled={!transcription || !video}
+                isDisabled={!transcription || !video }
               >
                 Clean Video
-              </button>
-              <button
-                className={styles.button}
+              </Button>
+              <Button variant="ghost"
+              
                 onClick={onDownloadClick}
-                disabled={!cleanedClip}
+                isDisabled={!cleanedClip}
               >
                 Download
-              </button>
-              <a
-                ref={downloadAnchor}
-                href={cleanedClip}
-                download={'result.mp4'}
-                style={{ display: 'none' }}
-              >
-                Click to download
-              </a>
+              </Button>
+                <a
+                  ref={downloadAnchor}
+                  href={cleanedClip}
+                  download={'result.mp4'}
+                  style={{ display: 'none' }}
+                >
+                  Click to download
+                </a>
             </div>
-            <Flex>
-              <Progress h={4} w="90vw" hasStripe isAnimated value={progress}>
-                <ProgressLabel color="black">
-                  {' '}
-                  {processStage.length > 0 &&
-                    timeTaken.length > 0 &&
-                    `${processStage.at(-1)} | Time taken: ${
-                      timeTaken.at(-1) - timeTaken.at(0)
-                    } ms` &&
-                    processStage.map((stage, i) => (
-                      <span key={i}>
-                        {stage}: {calcTimeTakenPerStage()[i]}
-                      </span>
-                    ))}{' '}
+            <Flex direction="column" justify="center" align="center">
+              <Progress height="20px" w="90vw" hasStripe isAnimated value={progress}>
+                <ProgressLabel fontSize="1rem" color="black">
+                    { `${progress}%`}
                 </ProgressLabel>
               </Progress>
+              <Container
+                textAlign="center"
+              >
+                {processStage.length > 0 &&
+                    timeTaken.length > 0 &&
+                    `${processStage.at(-1)} | Time taken: ${
+                      ((timeTaken.at(-1) - timeTaken.at(0)) / 1000 / 60).toFixed(2)
+                    } min`
+                    // && processStage.map((stage, i) => (
+                    //   <span key={i}>
+                    //     {stage}: {calcTimeTakenPerStage()[i]}
+                    //   </span>
+                    // ))
+                  }
+              </Container>
             </Flex>
             {transcription && <p>{JSON.stringify(transcription)}</p>}
           </>
