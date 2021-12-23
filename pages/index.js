@@ -496,11 +496,11 @@ export default function Home() {
                 {
                   processStage.length > 0 &&
                     timeTaken.length > 0 &&
-                    <strong>`${processStage.at(-1)} | Time taken: ${(
+                    <strong> {`${processStage.at(-1)} | Time taken: ${(
                       (timeTaken.at(-1) - timeTaken.at(0)) /
                       1000 /
                       60
-                    ).toFixed(2)} min`</strong>
+                    ).toFixed(2)} min`} </strong>
                   // && processStage.map((stage, i) => (
                   //   <span key={i}>
                   //     {stage}: {calcTimeTakenPerStage()[i]}
