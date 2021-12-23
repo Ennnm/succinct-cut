@@ -31,6 +31,7 @@ import {
   Flex,
   HStack,
   Tooltip,
+  Spinner
 } from '@chakra-ui/react';
 
 export default function Home() {
@@ -40,7 +41,7 @@ export default function Home() {
   const [ready, setReady] = useState(false);
   const [video, setVideo] = useState();
   const [audioUuid, setAudioUuid] = useState();
-  const [cleanedClip, setCleanedClip] = useState();
+  const [cleanedClip, setCleanedClip] = useState(false);
   //TODO remove trasncript
   const [transcription, setTranscription] = useState(transcript.result);
   const ffmpegRatio = useRef(0);
@@ -161,10 +162,10 @@ export default function Home() {
     }
     return durations;
   };
-  const [transcriptList, setTranscriptList] = useState();
-  const [optimizedList, setOptimizedList] = useState();
-  const [remainingPercentage, setRemainingPercentage] = useState(100);
-  const [transcriptDuration, setTranscriptDuration] = useState();
+  const [ transcriptList, setTranscriptList ] = useState();
+  const [ optimizedList, setOptimizedList ] = useState( false );
+  const [ remainingPercentage, setRemainingPercentage ] = useState(100);
+  const [ transcriptDuration, setTranscriptDuration] = useState();
   useEffect(() => {
     console.log('mergedTranscript', mergedTranscript);
     if (!!mergedTranscript) {
@@ -340,13 +341,22 @@ export default function Home() {
                 {message && <div>{message}</div>}
               </div>
               <div className={styles.card}>
-                {cleanedClip && (
-                  <video
-                    controls
-                    className={styles.video}
-                    src={cleanedClip}
-                  ></video>
-                )}
+                { video && (
+                  cleanedClip ?
+                    <video
+                      controls
+                      className={styles.video}
+                      src={cleanedClip}
+                    ></video> :
+                    <Spinner
+                      thickness='4px'
+                      speed='0.65s'
+                      emptyColor='gray.200'
+                      color='blue.500'
+                      size='xl'
+                    />
+                  )
+                }
               </div>
             </div>
             <div className={styles.grid}>
@@ -357,7 +367,7 @@ export default function Home() {
               </div>
               <div className={styles.minicard}>
                 <HStack width="100vw" border="1px solid" spacing={0}>
-                  {optimizedList}
+                  { optimizedList }
                   <Tooltip
                     hasArrow
                     label={`Time Savings = ${Math.round(
