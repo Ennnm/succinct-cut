@@ -7,7 +7,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 
 const ffmpeg = createFFmpeg({
   corePath: '/ffmpeg-core/ffmpeg-core.js',
-  // log: true,
+  log: true,
   // logger: ({message})=> console.log(message),
   // progress: (p) => console.log(p)
 });
