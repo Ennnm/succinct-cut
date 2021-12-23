@@ -132,7 +132,7 @@ export default function Home() {
             const { results } = result;
             console.log('result', result);
             console.log('results', results);
-            const lastResult = results[results.length-1]
+            const lastResult = results[results.length - 1];
             console.log('lastResult', lastResult);
             console.log('lastResult.alternatives[0]');
             const lastResultTimeStamps = lastResult.alternatives[0].timestamps;
@@ -520,7 +520,6 @@ export default function Home() {
                 }
               </Container>
             </Flex>
-            {transcription && <p>{JSON.stringify(transcription)}</p>}
           </>
         ) : (
           <Loader show={true} />
