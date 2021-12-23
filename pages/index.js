@@ -53,7 +53,7 @@ export default function Home() {
 
   const [mergedTranscript, setMergedTranscript] = useState();
   const [cleanedTranscript, setCleanedTranscript] = useState();
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState('Browse to import mp4');
 
   const NORMS = {};
 
