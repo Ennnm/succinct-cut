@@ -39,7 +39,7 @@ Succinct cut is a video cleaning service for unscripted video content.
 
 ## About The Project
 
-![succinct cut final screenshot](https://github.com/[username]/[reponame]/images/[branch]/6_sc.png?raw=true)
+![succinct cut final screenshot](https://github.com/Ennnm/succinct-cut/tree/main/images/6_sc.png?raw=true)
 
 Unedited videos are full of verbal disfluencies  ("huh", "uh", "erm", "um") and long pauses when the speaker is thinking of what to say. Editing such videos manually is tedious and time consuming.
 
