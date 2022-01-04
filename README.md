@@ -39,7 +39,7 @@ Succinct cut is a video cleaning service for unscripted video content.
 
 ## About The Project
 
-![succinct cut final screenshot](https://github.com/Ennnm/succinct-cut/images/6_sc.png?raw=true)
+![succinct cut final screenshot](/images/6_sc.png)
 
 
 
