@@ -125,7 +125,8 @@ You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
 ##### Issues
 
 - pure nextjs frontend and backend has a timeout of 15s
-  nextjs + firebase sets a timeout on IBM watsons of 540s (current approach).
+
+  <br>nextjs + firebase sets a timeout on IBM watsons of 540s (current approach).
 
   *A longer video will require a longer transcription time and this may be cut off prematurely.
   While working with firebase databases and cloud functions have their advantages, porting over to express backend on heroku and using [IBM async API](https://cloud.ibm.com/apidocs/speech-to-text?code=node#registercallback) may remove this problem with fixed timeouts.*
