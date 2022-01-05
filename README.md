@@ -1,7 +1,5 @@
 <div id="top"></div>
 
-<br />
-
 # Succinct Cut
 
 Succinct cut is a video cleaning service for unscripted video content. 
@@ -13,18 +11,10 @@ Succinct cut is a video cleaning service for unscripted video content.
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
     </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#usage-steps">Usage Steps</a></li>
+    <li><a href="#built-with">Built With</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -32,8 +22,6 @@ Succinct cut is a video cleaning service for unscripted video content.
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
-
-
 
 <!-- ABOUT THE PROJECT -->
 
@@ -45,86 +33,97 @@ Succinct cut is a video cleaning service for unscripted video content.
 
 Unedited videos are full of verbal disfluencies  ("huh", "uh", "erm", "um") and long pauses when the speaker is thinking of what to say. Editing such videos manually is tedious and time consuming.
 
-Succinct cut will
+##### Succinct cut will
 
-- Removes glaring disfluencies ("huh", "uh", "erm", "um")
+- Removes glaring disfluencies and hesitations
 - Reduce the duration of pauses without cuts.
 - Return you a final cut that is cleaner and shorter than the original mp4 video upload.
 
-In exchange for
+##### In exchange for
 
-- Some of your computer's cpu processing 
+- Some of your computer's CPU processing 
 - Time
+
+You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
+
+##### Performance on i5-8600 CPU desktop computer
+
+| Video size/mb | Video duration/min | Final Video Duration/min | Time taken for audio analysis/min | Time Taken for video editing/min |
+| ------------- | ------------------ | ------------------------ | --------------------------------- | -------------------------------- |
+| 21            | 1.04               | 0.53                     | 0.4                               | 11                               |
+| 130           | 6.44               | 5.04                     | 3.53                              | 73                               |
+
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+## Usage Steps
 
+1. Sign-in with google
+2. Upload an mp4 video ( max size: 100mb )
+3. __Analyze Video__ to start video analysis.
+4. __Clean__ __Video__ when progress bar reaches 50% to start video processing. Colored bars will appear below the video to indicate the type of speech (speech, hesitation, pauses) according to the analysis. The bar on the right indicates the _cleaned_ version that is used for video processing.
+5. __Download__ when progress bar reaches 100%
 
-### Built With
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Built With
+
+##### Frontend
 
 * [Next.js](https://nextjs.org/)
 * [React.js](https://reactjs.org/)
-* [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
+
+##### Backend. Authentication, database, storage, functions
+
+* [Firebase auth](https://firebase.google.com/docs/auth)
+* [Cloud Firestore](https://firebase.google.com/docs/firestore)
+* [Cloud storage](https://firebase.google.com/docs/storage)
+* [Cloud functions](https://firebase.google.com/docs/functions)
+
+##### Video/audio analysis to get speeech, disfluencies, and pauses
+
+- [IBM Watson Speech to Text](https://www.ibm.com/sg-en/cloud/watson-speech-to-text)
+
+##### Video conversion, cutting, and editing in the browser
+
+- [Ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm)
+- [Ffmpeg](https://www.ffmpeg.org/)
+
+##### Styling
+
+- [chakra-ui](https://chakra-ui.com/)
+
+##### Planning
+
+- [notion](https://wongshennan.notion.site/Video-Editor-Transcription-2877c4a64f5b46fdaace8af30a474a5d)
+
+
+
+[frontend repo](https://github.com/Ennnm/succinct-cut)
+
+[backend repo](https://github.com/Ennnm/succinct-cut-cloudfunc)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+### Pipeline
+
+```mermaid
+graph TD
+A[video upload] -->|ffmpeg|B(audio.aac)
+B -->|uploaded| C(Cloud storage)
+C -->|triggers| D(Cloud function)
+D -->|audiostream| E(IBM watsons speech to text)
+E -->|JSON transcript| D
+D -->|JSON transcript| F(Firestore)
+F -->|onSnapshot| G(Client)
+G -->|cleaning of JSON| H(cleaned transcript)
+H --> J[Display in FE]
+H --> K(ffmpeg)
+K -->|cutting, editing, stitching| L[Final video]
+```
 
 
-<!-- GETTING STARTED -->
-
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-
-* npm
-
-  ```sh
-  npm install npm@latest -g
-  ```
-
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-
-2. Clone the repo
-
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-
-3. Install NPM packages
-
-   ```sh
-   npm install
-   ```
-
-4. Enter your API in `config.js`
-
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -134,10 +133,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## Roadmap
 
-- [] Feature 1
-- [] Feature 2
-- [] Feature 3
-  - [] Nested Feature
+- [] Fix login bugs
+- [] Nicer login ui
+- [] Port from nextjs + firebase to heroku
 
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
@@ -178,9 +176,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Jia En - [@ennnm_](https://twitter.com/ennnm_) - jiaen.1sc4@gmail.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Shen Nan - [@wongsn](https://twitter.com/wongsn) - wongshennan@gmail.com
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -190,9 +188,7 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+* [Fireship ](https://www.youtube.com/watch?v=-OTc0Ki7Sv0)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
