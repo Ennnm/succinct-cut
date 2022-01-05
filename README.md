@@ -35,13 +35,13 @@ Unedited videos are full of verbal disfluencies  ("huh", "uh", "erm", "um") and 
 
 ##### Succinct cut will
 
-- Removes glaring disfluencies and hesitations
+- Removes glaring disfluencies and hesitations.
 - Reduce the duration of pauses without cuts.
 - Return you a final cut that is cleaner and shorter than the original mp4 video upload.
 
 ##### In exchange for
 
-- Some of your computer's CPU processing 
+- Some of your computer's CPU processing resources
 - Time
 
 You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
@@ -59,8 +59,8 @@ You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
 
 ## Usage Steps
 
-1. __Sign-in with google__
-2. __Browse__ to upload a mp4 video ( max size: 100mb )
+1. __Sign-in with Google__
+2. __Browse__ to upload a .mp4 video ( max size: 100mb )
 3. __Analyze Video__ to start video analysis.
 4. __Clean__ __Video__ when progress bar reaches 50% to start video processing. 
    *Colored bars will appear below the video to indicate the type of speech (speech, hesitation, pauses) that occurred in the video's timeframe. 
@@ -78,14 +78,14 @@ You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
 
 ##### Backend. Authentication, database, storage, functions
 
-* [Firebase auth](https://firebase.google.com/docs/auth)
+* [Firebase Auth](https://firebase.google.com/docs/auth)
 * [Cloud Firestore](https://firebase.google.com/docs/firestore)
-* [Cloud storage](https://firebase.google.com/docs/storage)
-* [Cloud functions](https://firebase.google.com/docs/functions)
+* [Cloud Storage](https://firebase.google.com/docs/storage)
+* [Cloud Functions](https://firebase.google.com/docs/functions)
 
 ##### Video/audio analysis to get speeech, disfluencies, and pauses
 
-- [IBM Watson Speech to Text](https://www.ibm.com/sg-en/cloud/watson-speech-to-text)
+- [IBM Watson Speech-to-Text](https://www.ibm.com/sg-en/cloud/watson-speech-to-text)
 
 ##### Video conversion, cutting, and editing in the browser
 
@@ -124,14 +124,14 @@ You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
 
 ##### Issues
 
-- pure nextjs frontend and backend has a timeout of 15s
+- Vercel deployment has a timeout of 15s.
 
-- nextjs + firebase sets a timeout on IBM watsons of 540s (current approach).
+- NextJS + Firebase sets a timeout on IBM watsons of 540s (current approach).
 
   *A longer video will require a longer transcription time and this may be cut off prematurely.
   While working with firebase databases and cloud functions have their advantages, porting over to express backend on heroku and using [IBM async API](https://cloud.ibm.com/apidocs/speech-to-text?code=node#registercallback) may remove this problem with fixed timeouts.*
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/ennnm/succinct_cut/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -169,7 +169,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## Contact
 
 Jia En - [@ennnm_](https://twitter.com/ennnm_) - jiaen.1sc4@gmail.com
-
 Shen Nan - [@wongsn](https://twitter.com/wongsn) - wongshennan@gmail.com
 
 <p align="right">(<a href="#top">back to top</a>)</p>
