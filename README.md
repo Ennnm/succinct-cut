@@ -1,8 +1,8 @@
 <div id="top"></div>
 
-# Succinct Cut
+# Succinct Cut 🎥🧹✂
 
-Succinct cut is a video cleaning service for unscripted video content. 
+##### Succinct cut is a video cleaning service for unscripted video content. 
 
 <!-- TABLE OF CONTENTS -->
 
@@ -60,9 +60,11 @@ You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
 ## Usage Steps
 
 1. Sign-in with google
-2. Upload an mp4 video ( max size: 100mb )
+2. Upload a mp4 video ( max size: 100mb )
 3. __Analyze Video__ to start video analysis.
-4. __Clean__ __Video__ when progress bar reaches 50% to start video processing. Colored bars will appear below the video to indicate the type of speech (speech, hesitation, pauses) according to the analysis. The bar on the right indicates the _cleaned_ version that is used for video processing.
+4. __Clean__ __Video__ when progress bar reaches 50% to start video processing. 
+   *Colored bars will appear below the video to indicate the type of speech (speech, hesitation, pauses) that occurred in the video's timeframe. 
+   The bar on the right visualises the cleaned state without hesitations and long pauses.*
 5. __Download__ when progress bar reaches 100%
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -108,26 +110,9 @@ You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
 
 ### Pipeline
 
-```mermaid
-graph TD
-A[video upload] -->|ffmpeg|B(audio.aac)
-B -->|uploaded| C(Cloud storage)
-C -->|triggers| D(Cloud function)
-D -->|audiostream| E(IBM watsons speech to text)
-E -->|JSON transcript| D
-D -->|JSON transcript| F(Firestore)
-F -->|onSnapshot| G(Client)
-G -->|cleaning of JSON| H(cleaned transcript)
-H --> J[Display in FE]
-H --> K(ffmpeg)
-K -->|cutting, editing, stitching| L[Final video]
-```
-
-
+![flowchart](/images/pipeline_mermaid.JPG)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- ROADMAP -->
 
