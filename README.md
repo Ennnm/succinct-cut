@@ -59,8 +59,8 @@ You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
 
 ## Usage Steps
 
-1. Sign-in with google
-2. Upload a mp4 video ( max size: 100mb )
+1. __Sign-in with google__
+2. __Browse__ to upload a mp4 video ( max size: 100mb )
 3. __Analyze Video__ to start video analysis.
 4. __Clean__ __Video__ when progress bar reaches 50% to start video processing. 
    *Colored bars will appear below the video to indicate the type of speech (speech, hesitation, pauses) that occurred in the video's timeframe. 
