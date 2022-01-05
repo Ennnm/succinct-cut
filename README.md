@@ -122,11 +122,17 @@ You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
 - [] Nicer login ui
 - [] Port from nextjs + firebase to heroku
 
+##### Issues
+
+- pure nextjs frontend and backend has a timeout of 15s
+  nextjs + firebase sets a timeout on IBM watsons of 540s (current approach).
+
+  *A longer video will require a longer transcription time and this may be cut off prematurely.
+  While working with firebase databases and cloud functions have their advantages, porting over to express backend on heroku and using [IBM async API](https://cloud.ibm.com/apidocs/speech-to-text?code=node#registercallback) may remove this problem with fixed timeouts.*
+
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- CONTRIBUTING -->
 
