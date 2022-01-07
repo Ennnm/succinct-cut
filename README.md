@@ -16,6 +16,7 @@
     <li><a href="#built-with">Built With</a></li>
     <li><a href="#pipeline">Pipeline</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#retrospective">Retrospective</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -116,18 +117,31 @@ You can find the deployed app [here](http://cutcut-sigma.vercel.app/)
 - [] Nicer login ui
 - [] Port from nextjs + firebase to heroku
 
-##### Issues
-
-- Vercel deployment has a timeout of 15s.
-
-- NextJS + Firebase sets a timeout on IBM watsons of 540s (current approach).
-
-  _A longer video will require a longer transcription time and this may be cut off prematurely.
-  While working with firebase databases and cloud functions have their advantages, porting over to express backend on heroku and using [IBM async API](https://cloud.ibm.com/apidocs/speech-to-text?code=node#registercallback) may remove this problem with fixed timeouts._
-
 See the [open issues](https://github.com/ennnm/succinct_cut/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- Retrospective-->
+
+## Retrospective
+
+##### Framework
+
+NextJS was chosen in a whim as we wanted to explore non create-react-app frameworks. Unexpectedly Vercel serverless functions has a timeout of 15s, which would cut off before a transcription result is received from the IBM watsons speech-text request.
+
+This was extended to 540s when the IBM speech-to-text call was moved to Firebase cloud functions. It is sufficient for proof-of-concept tests of short videos <9min (current approach).
+
+To overcome time-outs, a Create-React-App frontend, Express backend, and the use of [IBM async API](https://cloud.ibm.com/apidocs/speech-to-text?code=node#registercallback) will be more suitable. The pipeline will be much simpler than the one shown above.
+
+##### IBM Watsons speech-to-text
+
+Started using this API because a very early idea of succinct cut was to edit videos by deleting words from a transcript. Idea was simplified as it was hard to accomplish that in 2 weeks. Regardless we proceeded with using the API as it will give us timestamps of hesitations, which depending on the video, can be an insignificant feature.
+
+If it was decided initially to process the video based on pauses/long silences, IBM Watsons speech-to-text will not be needed. [AudioContext](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext) could be used to analyze for silences, and the lengthy audio analysis stage can be shortened.
+
+##### Conclusion
+
+Despite the choice of methods being less ideal, there was lots to learn from using the Vercel deployment, Firebase, and IBM watsons speech to text.
 
 <!-- CONTRIBUTING -->
 
